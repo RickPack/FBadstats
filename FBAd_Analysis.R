@@ -64,9 +64,10 @@ dmafb <- read.csv(filrd)
 dmafb[is.na(dmafb)] <- 0
 dmafb <- tbl_df(dmafb)
 if (grepl("AD.SET",toupper(dnams))){
-  adcomp <- dmafb[,grep('AD.SET',str_to_upper(dnams))] }
-else (grepl("CAMPAIGN",toupper(dnams))){
+  adcomp <- dmafb[,grep('AD.SET',str_to_upper(dnams))] 
+  } else if (grepl("CAMPAIGN",toupper(dnams))){
   adcomp <- dmafb[,grep('CAMPAIGN',str_to_upper(dnams))] }
+
 if(adset==1){
   dmafb$Campaign.Name <- dmafb$Ad.Set.Name
 }
@@ -193,8 +194,8 @@ if (grepl(showme,'LEADFORM') | showme==5){
   plotforms <- ggplot(statset) + aes(x = DMA.Region, y = costforms, fill = DMA.Region) + scale_x_discrete(limits = statset$DMA.Region) + scale_y_continuous(labels = scales::dollar) +
     geom_col(show.legend=FALSE)  +  
     labs(title = paste("Facebook Ads Analysis for ", sumnam, ":  ", todaydt, sep=""),
-          caption = paste("Data from ", filrd, sep="")
-           )
+         caption = paste("Data from ", filrd, sep="")
+    )
   extrainfo <- paste("Median for (all) only considers where there was at least one ", sumnam, sep="")
   stat_tbl <- data.frame(medtop, medall, spentlim, extrainfo)
   colnames(stat_tbl) <- c("Median cost per lead form (top 8)", "Median cost per lead form (all)", "Minimum amount spent threshold", "INFO:")
