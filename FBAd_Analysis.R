@@ -1,8 +1,13 @@
-## model https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html for vignette
-home <- 1
+library(devtools)
 
+
+
+## model https://cran.r-project.org/web/packages/cowplot/vignettes/introduction.html for vignette
+home <- 0
+
+todaydt <- Sys.Date()
 ## for package / github usage
-packvar <- 1
+packvar <- 0
 ## adset or campaign name row
 adset <- 1
 ## characters to filter campaign or ad set by
@@ -12,7 +17,7 @@ spentlim <- 0
 ## Require event to be summarized?
 eventreq <- 1
 ## What reports do you want to see? Input (1) CTR, (2) REG, (3) VIEWS, (4) LEADS, (5) LEADFORM
-showme <- 'LEADFORM'
+showme <- 5
 
 if (home == 1){
   setwd('C:/Users/rick2/Documents/SavvyCareerists/')
@@ -33,6 +38,7 @@ library(tidyverse)
 library(ggplot2)
 library(gridExtra)
 library(cowplot)
+library(devtools)
 #library(tidyr)
 ## using 30 because lower numbers still caused showing of 10 rows
 options(tibble.print_max = 30)
@@ -49,13 +55,18 @@ options(tibble.width = 300)
 # [15] "Post.Comments"                                 "Post.Reactions"                               
 # [17] "Post.Shares"                                   "Website.Leads"                                
 # [19] "Cost.per.Website.Lead.USD."                    "Leads..Form."                        
-# [21] "Cost.per.Leads..Form..USD."           "Cost.per.Page.Like.USD."      
+# [21] "Cost.per.Leads..Form..USD."                    "Cost.per.Page.Like.USD."      
 dmafb <- data.frame(read_csv(filrd))
-# replace missing value (NA) with 0
+
 dnams       <- colnames(dmafb)
 dmafb <- read.csv(filrd)
+# replace missing value (NA) with 0
 dmafb[is.na(dmafb)] <- 0
 dmafb <- tbl_df(dmafb)
+if (grepl("AD.SET",toupper(dnams))){
+  adcomp <- dmafb[,grep('AD.SET',str_to_upper(dnams))] }
+else (grepl("CAMPAIGN",toupper(dnams))){
+  adcomp <- dmafb[,grep('CAMPAIGN',str_to_upper(dnams))] }
 if(adset==1){
   dmafb$Campaign.Name <- dmafb$Ad.Set.Name
 }
@@ -105,7 +116,7 @@ if (eventreq==1){
 } else {
   dmasum2  <- filter(dmasum, sumspent >= spentlim)
 }
- 
+
 
 dmastat_ctravg   <- dmasum2 %>% arrange(desc(avgctr), desc(sumspent)) %>% mutate(rnkctravg = min_rank(avgctr))   %>% select(`DMA.Region`, sumspent, sumreg, sumleads, rnkctravg, avgctr)
 ## medians not varying
@@ -166,7 +177,7 @@ if (grepl(showme,'LEADS')){
   print("BEST")
   print(sumleadavg[1:20,])
 }
-if (grepl(showme,'LEADFORM')){
+if (grepl(showme,'LEADFORM') | showme==5){
   sumnam <- "Leads(form)"
   sumformsavg <- dmastat_all %>% select(-c(rnkreg, costreg, rnkwatch, avgwatch)) %>% arrange(desc(rnkforms))
   print("WORST")
@@ -179,7 +190,11 @@ if (grepl(showme,'LEADFORM')){
   medtop  <- round(median(statset$costforms),1)
   medall  <- round(median(sumformsavg$costforms),1)
   
-  plotforms <- ggplot(statset) + aes(x = DMA.Region, y = costforms, fill = DMA.Region) + scale_x_discrete(limits = statset$DMA.Region) + geom_col(show.legend=FALSE)
+  plotforms <- ggplot(statset) + aes(x = DMA.Region, y = costforms, fill = DMA.Region) + scale_x_discrete(limits = statset$DMA.Region) + scale_y_continuous(labels = scales::dollar) +
+    geom_col(show.legend=FALSE)  +  
+    labs(title = paste("Facebook Ads Analysis for ", sumnam, ":  ", todaydt, sep=""),
+          caption = paste("Data from ", filrd, sep="")
+           )
   extrainfo <- paste("Median for (all) only considers where there was at least one ", sumnam, sep="")
   stat_tbl <- data.frame(medtop, medall, spentlim, extrainfo)
   colnames(stat_tbl) <- c("Median cost per lead form (top 8)", "Median cost per lead form (all)", "Minimum amount spent threshold", "INFO:")
@@ -189,7 +204,6 @@ if (grepl(showme,'LEADFORM')){
   print(grid.arrange(plotforms, stat_tbl, as.table=TRUE,
                      heights=c(3,1)))
   #dev.off()
-  
 }
 if (grepl(showme,'WATCH')){       
   sumviewavg <- arrange(dmastat_all, rnkwatch)
@@ -202,5 +216,9 @@ if (grepl(showme,'WATCH')){
 }
 
 print(paste("Number of regions in all of data: ", length(unique(dmasum$DMA.Region)), sep=""))
-print(paste("Number of regions in subset for minimum spend of $", spentlim, ": ", length(unique(dmasum2$DMA.Region)), sep=""))
+print(paste("Number of regions in subset with at least one ", sumnam, " and minimum spend of $", spentlim,  " = ", length(unique(dmasum2$DMA.Region)), sep=""))
 print(paste("Total amount spent: $", sum(dmasum$sumspent), sep=""))
+
+state_chloropleth(datafrm, num_colors = 2, zoom=c("north carolina","virginia"))
+county_chloropleth
+zip_chloropleth (county=1234, reference_map=TRUE)
