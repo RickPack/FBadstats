@@ -1,0 +1,47 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# fbadstats
+
+R Package for generating statistics from Facebook ads performance data
+
+## Installation
+
+First install the free (open-source) statistical software named "R" (use http://rseek.org to research) at:
+[http://cran.rstudio.com/](http://cran.rstudio.com/)
+
+Then download the most popular GUI for R, RStudio. The free version will be perfect. Scroll down and choose the appropriate installer under **Installers for Supported Platforms** at:
+[https://www.rstudio.com/products/rstudio/download/](https://www.rstudio.com/products/rstudio/download/)
+
+Load RStudio and you can now install the fbadstats package from github by entering the following in RStudio:
+```{r gh-installation, eval = FALSE}
+## This first package is to enable the install_github function
+install.packages("devtools")
+## Now we can always load that package with
+library("devtools")
+## Install fbadstats
+devtools::install_github("RickPack/fbadstats")
+## Load fbadstats
+library("fbadstats")
+```
+
+## Example
+**Note**: See more examples by entering in RStudio:
+```{r, eval = FALSE}
+vignette(package = "fbadstats")
+```
+
+```{r example, fig.width = 15, fig_height = 15}
+fbadGstats(filerd = "example_PerfClk_AgeGender.csv", grphout = "YES", tblout = "BEST")
+```

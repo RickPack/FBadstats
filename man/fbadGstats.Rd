@@ -2,9 +2,7 @@
 % Please edit documentation in R/fbadGstats.R
 \name{fbadGstats}
 \alias{fbadGstats}
-\title{` Reports statistics across ads from Facebook Ads Manager and displays the best and worst performing breakdown groups for specified variables
-    (e.g., "Website Registrations Completed"). Can also display a bar graph showing the cost per desired event for the best breakdown groups along with a summary table
-     comparing those best performers to the data as a whole.}
+\title{Reports statistics across ads from Facebook Ads Manager exported data.}
 \usage{
 fbadGstats(filerd = "", choosedir = "NO", sumvar = "", filtervar = "",
   spentlim = 0, minevent = 0, prtrow = 20, tblout = "BOTH",
@@ -13,17 +11,17 @@ fbadGstats(filerd = "", choosedir = "NO", sumvar = "", filtervar = "",
 \arguments{
 \item{filerd}{Filename to read. Must be a CSV file.}
 
-\item{choosedir}{[Windows-Only] If "YES", prompts the user for a directory / folder in which all CSV files will be processed by fbadGstats.}
+\item{choosedir}{[Windows-Only] If 'YES', prompts the user for a directory / folder in which all CSV files will be processed by fbadGstats.}
 
 \item{sumvar}{Variable of focus for analysis. Can provide just a few letters as long as they do not match another column in the data. For example,
-could use "REG" for "Website Registrations Completed" (case-insensitive). Defaults to "Link Clicks".}
+could use 'REG' for 'Website Registrations Completed' (case-insensitive). Defaults to 'Link Clicks'.}
 
 \item{filtervar}{Limits the analyzed data to only those of a primary group (the first column that appears in Ads Manager like Campaign Name or Ad Set Name)
 matching the provided string of characters (case-insensitive).}
 
 \item{spentlim}{Minimum amount that must have been spent in a breakdown group (e.g., DMA Region) in order to appear in the output.}
 
-\item{minevent}{Minimum number of "events" (e.g., Link Clicks) that must have occurred in order for a breakdown group to appear in the output.}
+\item{minevent}{Minimum number of 'events' (e.g., Link Clicks) that must have occurred in order for a breakdown group to appear in the output.}
 
 \item{prtrow}{Number of breakdown groups that will appear in the output, both the best and worst will appear separately. Default = 20.}
 
@@ -34,20 +32,22 @@ matching the provided string of characters (case-insensitive).}
 \item{ctrstats}{If yes, prints statistics for clickthrough rate if available in data (CTR) - defaults to NO. Valid values are : YES, NO. Prioritizes CTR..LINK.CLICK.THROUGH.RATE.}
 }
 \value{
-Best or worst performing subgroups depending on tblout parameter, best performers with a table if grphout parameter is YES. Also returns data frame containing the
-statistics for all of the breakdown groups, best or worst depending on tblout parameter. Does this invisibly to avoid double-printing. Make the frame available for your use by assigning the
-fbadGstats function to an object, such as mystats in this example: mystats <- fbadGstats(filerd = a_file_path, sumvar="REG")
+Best or worst performing subgroups depending on `tblout` parameter. Also a graph with a complementary table for the best performers
+    if grphout parameter is YES.
 }
 \description{
-` Reports statistics across ads from Facebook Ads Manager and displays the best and worst performing breakdown groups for specified variables
-    (e.g., "Website Registrations Completed"). Can also display a bar graph showing the cost per desired event for the best breakdown groups along with a summary table
-     comparing those best performers to the data as a whole.
+Reports statistics for breakdown groups (e.g., Age) across ads from Facebook Ads Manager exported data.
+ Displays the best and worst performing breakdown groups with a ranking as well as the sum total of a specified event
+    (e.g., 'Website Registrations Completed'). Can also distplay a bar graph showing the cost per specified event for the
+    best breakdown groups along with a summary table comparing those best performers to the data as a whole.
 }
 \examples{
 ## to present a window in which one navigates to the desired CSV file, outputs LINK CLICKS summary by default (Performance and Clicks view suggested)
 fbadGstats()
-## examine the best and worst performing Direct Marketing Areas (DMA) with respect to the results column containing "REG" (case-insenstive, so this matches Wesbite.Registrations.Completed)
-fbadGstats(filerd="example_DMA.csv", sumvar="REG")
-## same as above but exclude any rows for the
-fbadGstats(filerd="example_DMA.csv", sumvar="REG")
+#' similar but one selects a folder and all of the CSV files are processed, and the summarized performance measure is WEBSITE.LEADS.
+fbadGstats(choosedir = "YES", sumvar = "WEBSITE.LEADS")
+## examine the best and worst performing Direct Marketing Areas (DMA) with respect to the results column containing 'REG' (case-insenstive, so this matches Wesbite.Registrations.Completed)
+fbadGstats(filerd='example_DMA.csv', sumvar='REG')
+## see more examples with output
+vignette(package = "fbadstats")
 }
