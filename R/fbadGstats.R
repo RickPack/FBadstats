@@ -18,26 +18,28 @@
 #' @return Best or worst performing subgroups depending on `tblout` parameter. Also a graph with a complementary table for the best performers
 #'     if grphout parameter is YES.
 #' @examples
-#' ## to present a window in which one navigates to the desired CSV file, outputs LINK CLICKS summary by default (Performance and Clicks view suggested)
+#' ## to present a window in which one navigates to the desired CSV file, outputs LINK CLICKS summary (Performance and Clicks view suggested in Facebook Ads Manager)
 #' fbadGstats()
-#' #' similar but one selects a folder and all of the CSV files are processed, and the summarized performance measure is WEBSITE.LEADS.
+#' ## similar but one selects a folder and all of the CSV files are processed, and the summarized performance measure is WEBSITE.LEADS.
 #' fbadGstats(choosedir = "YES", sumvar = "WEBSITE.LEADS")
 #' ## examine the best and worst performing Direct Marketing Areas (DMA) with respect to the results column containing 'REG' (case-insenstive, so this matches Wesbite.Registrations.Completed)
 #' fbadGstats(filerd='example_DMA.csv', sumvar='REG')
-#' ## see more examples with output
+#' ## see more examples with:
 #' vignette(package = "fbadstats")
-#' @importFrom readr read_csv
-#' @importFrom ggplot2 ggplot aes scale_x_discrete scale_y_continuous geom_col labs xlab ylab theme element_text
+#' @importFrom ggplot2 ggplot aes scale_x_discrete scale_y_continuous geom_col labs xlab ylab theme element_text ggplotGrob
 #' @importFrom gridExtra grid.arrange tableGrob ttheme_minimal arrangeGrob
 #' @importFrom stringr str_c str_to_upper str_subset str_trim
 #' @importFrom dplyr select %>% as_tibble pull filter contains quo group_by summarize mutate_if funs distinct arrange min_rank left_join inner_join mutate slice trunc_mat tbl_df
 #' @export
 fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "", filtervar = "", spentlim = 0, minevent = 0, prtrow = 20, tblout = "BOTH", grphout = "YES", ctrstats = "NO") {
-
+   ## Reminder to clean-up code regularly with:
     # formatR::tidy_dir('R')
 
     # default to assuming user will not use one of the two provided example CSV files
     example <- 0
+    # present early in package development R instance so may be critical
+    origoptFact <- getOption("stringsAsFactors")
+    options(stringsAsFactors=FALSE)
 
     todaydt <- Sys.Date()
     if (choosedir == "YES") {
@@ -135,7 +137,7 @@ fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "", filtervar = "
             dmafb <- dmafb %>% select(dnams[1:3], PLATFORM_DEVICE, dnams[6:length(dnams)])
         }
         ## This is expected to be DMA.Region or another grouping variable like Age
-        dmafb$DMA.REGION <- dmafb %>% pull(4)
+        dmafb$bygrpvar <- dmafb %>% pull(4)
 
         dmafb$S1 <- dmafb %>% select(contains("SPENT")) %>% pull(1)
         dnams <- colnames(dmafb)
@@ -219,7 +221,7 @@ fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "", filtervar = "
 
         dmasum2 <- filter(dmasum, sumspent >= spentlim & sumevt > minevent)
         dmastat_evt <- dmasum2 %>% arrange(costevt, desc(sumspent)) %>% mutate(rnkevt = min_rank(costevt)) %>% select(!!grpvar, rnkevt, sumevt, costevt, sumspent)
-        dmastat_all <- as_tibble(dmasum2 %>% distinct(!!grpvar))
+        dmastat_all <- as_tibble(dmasum2 %>% distinct(!!grpvar), validate = FALSE)
 
         if (noctr != 1) {
             dmastat_ctravg <- dmasum2 %>% arrange(desc(avgctr), desc(sumspent)) %>% mutate(rnkctravg = min_rank(avgctr)) %>% select(!!grpvar, sumspent, rnkctravg, avgctr)
@@ -241,9 +243,8 @@ fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "", filtervar = "
 
         dmastat_all[is.na(dmastat_all)] <- 999
         prtrow <- min(prtrow, nrow(dmastat_all))
-
         ## Keep so line-break between each processed file when multiple files selected
-        print("-------------------------------------------------------------------------------------------------------------------")
+        print("--------------------------------------------------------------------------------------")
 
         if (noctr != 1) {
             if (tblout %in% c("WORST", "BOTH")) {
@@ -260,7 +261,7 @@ fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "", filtervar = "
         if (tblout %in% c("WORST", "BOTH")) {
             sumevtavg <- arrange(dmastat_all, desc(rnkevt))
             print(str_c("WORST: ", sumprtvar, " in ", file_nam))
-            print(trunc_mat(tbl_df(sumevtavg[1:prtrow, ]))$table)
+            print(trunc_mat(sumevtavg[1:prtrow, ])$table)
         }
         if (tblout %in% c("BEST", "BOTH")) {
             sumevtavg <- arrange(dmastat_all, rnkevt)
@@ -270,9 +271,9 @@ fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "", filtervar = "
         grpvarprt <- gsub("[.]", " ", as.character(grpvar[2]))
         print(paste("Number of regions in all of data: ", length(unique(dmasum %>% pull(!!grpvar))), sep = ""))
         if (exists("sumnam")) {
-            print(paste("Number of ", grpvarprt, " groups in subset with at least one ", sumprtvar, " and minimum spend of $", spentlim, " = ", length(unique(dmasum2 %>% pull(!!grpvar))), sep = ""))
+            print(paste("Number of ", grpvarprt, " groups with at least one ", sumprtvar, " and minimum spend of $", spentlim, " = ", length(unique(dmasum2 %>% pull(!!grpvar))), sep = ""))
         } else {
-            print(paste("Number of ", grpvarprt, " groups in subset with minimum spend of $", sumprtvar, " = ", length(unique(dmasum2 %>% pull(!!grpvar))), sep = ""))
+            print(paste("Number of ", grpvarprt, " groups with minimum spend of $", sumprtvar, " = ", length(unique(dmasum2 %>% pull(!!grpvar))), sep = ""))
         }
         print(paste("Total amount spent: $", sum(dmasum$sumspent), sep = ""))
 
@@ -286,22 +287,22 @@ fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "", filtervar = "
             medtop <- round(median(statset$costevt), 1)
             medall <- round(median(sumevtavg_gt0$costevt), 1)
             medspent <- round(median(statset$sumspent))
-
             plotforms <- ggplot(statset) + aes(x = (statset %>% pull(!!grpvar)), y = costevt, fill = (statset %>% pull(!!grpvar))) + scale_x_discrete(limits = statset %>% pull(!!grpvar)) + scale_y_continuous(labels = scales::dollar) +
                 geom_col(show.legend = FALSE) + labs(title = paste("Facebook Ads Analysis for ", sumnam, ": Created on  ", todaydt, sep = ""), caption = paste("Data from ", file_nam, sep = "")) + theme(plot.title = element_text(hjust = 0.5)) +
                 xlab(str_c("Best performing (lowest cost) ", grpvarprt)) + ylab(str_c("Cost per ", sumnam))
-
-            extrainfo <- paste("Median cost for (all) only considers where there was at least one ", sumnam, sep = "")
+            plotformsG <- ggplotGrob(plotforms)
+            extrainfo <- paste("Median cost (all) only considers where there was\nat least one ", sumnam, sep = "")
             stat_tbl <- data.frame(medtop, medall, medspent, spentlim, extrainfo)
-            colnames(stat_tbl) <- c(str_c("Median cost per '", sumprtvar, "':\n(graphed best performers)"), str_c("Median cost per '", sumprtvar, "'\n for (all)"), "Median Amount Spent:\n(graphed best performers)",
-                "Minimum amount spent threshold\nspentlim parameter", "INFO:")
-            tt <- ttheme_minimal(base_size = 12)
-            finalG <- grid.arrange(grobs = list(plotforms, tableGrob(stat_tbl, theme = tt, rows = NULL)), as.table = TRUE, heights = c(3, 1))
-            print(finalG)
-            print("NOTE: Please ignore the TableGrob section of the output. This will hopefully be suppressed in a future version.")
+            colnames(stat_tbl) <- c(str_c("Median cost\nper '", sumprtvar, "':\n(graphed best performers)"), str_c("Median cost\nper '", sumprtvar, "'\n for (all)"), "Median amount spent\n(graphed best performers)",
+                "Minimum amount spent\nthreshold (spentlim parameter)", "INFO:")
+            tt <- ttheme_minimal(base_size = 10)
+            ## print without print function to avoid undesired extraneous output
+            grid.arrange(grobs = list(plotforms, tableGrob(stat_tbl, theme = tt, rows = NULL)), as.table = TRUE, heights = c(3, 1))
         }
     }
+    # restore stringsAsFactors option to original value
+    options(stringsAsFactors=origoptFact)
 }
 .onAttach <- function(libname, pkgname) {
-    packageStartupMessage("FB Ads Analysis tool: 'fbadGstats' - Breakdown analysis function.")
+    packageStartupMessage("FB Ads Analysis tool: 'fbadGstats' - Breakdown Group analysis function")
 }

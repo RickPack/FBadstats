@@ -35,9 +35,9 @@ vignette(package = "fbadstats")
 ``` r
 ## Load fbadstats
 library("fbadstats")
-#> FB Ads Analysis tool: 'fbadGstats' - Breakdown analysis function.
+#> FB Ads Analysis tool: 'fbadGstats' - Breakdown analysis function!.
 fbadGstats(filerd = "example_PerfClk_AgeGender.csv", grphout = "YES", tblout = "BEST")
-#> [1] "-------------------------------------------------------------------------------------------------------------------"
+#> [1] "--------------------------------------------------------------------------------------"
 #> [1] "BEST: RESULTS in example_PerfClk_AgeGender.csv"
 #>      AGE_GENDER rnkevt sumevt costevt sumspent
 #>           <chr>  <int>  <dbl>   <dbl>    <dbl>
@@ -50,14 +50,8 @@ fbadGstats(filerd = "example_PerfClk_AgeGender.csv", grphout = "YES", tblout = "
 #> 7  35-44:female      6    108     1.5   164.20
 #> 8  45-54:female      6     41     1.5    62.28
 #> [1] "Number of regions in all of data: 14"
-#> [1] "Number of AGE_GENDER groups in subset with at least one RESULTS and minimum spend of $0 = 8"
+#> [1] "Number of AGE_GENDER groups with at least one RESULTS and minimum spend of $0 = 8"
 #> [1] "Total amount spent: $384.38"
 ```
 
-![](README-example-1.png)
-
-    #> TableGrob (2 x 1) "arrange": 2 grobs
-    #>   z     cells    name               grob
-    #> 1 1 (1-1,1-1) arrange     gtable[layout]
-    #> 2 2 (2-2,1-1) arrange gtable[colhead-fg]
-    #> [1] "NOTE: Please ignore the TableGrob section of the output. This will hopefully be suppressed in a future version."
+<img src="README-example-1.png" style="display: block; margin: auto;" />
