@@ -41,7 +41,7 @@ devtools::install_github("RickPack/fbadstats")
 vignette(package = "fbadstats")
 ```
 
-```{r example, fig.width = 15, fig_height = 15}
+```{r example, fig.width = 10, fig.height = 4.5, fig.align = 'center'}
 ## Load fbadstats
 library("fbadstats")
 fbadGstats(filerd = "example_PerfClk_AgeGender.csv", grphout = "YES", tblout = "BEST")
