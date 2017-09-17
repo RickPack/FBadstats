@@ -11,10 +11,13 @@ fbadGstats(filerd = "", choosedir = "NO", sumvar = "", filtervar = "",
 \arguments{
 \item{filerd}{Filename to read. Must be a CSV file.}
 
-\item{choosedir}{[Windows-Only] If 'YES', prompts the user for a directory / folder in which all CSV files will be processed by fbadGstats.}
+\item{choosedir}{[Windows-Only] If 'YES', prompts the user for a directory /
+folder in which all CSV files will be processed by fbadGstats.}
 
-\item{sumvar}{Variable of focus for analysis. Can provide just a few letters as long as they do not match another column in the data. For example,
-could use 'REG' for 'Website Registrations Completed' (case-insensitive). Defaults to 'Link Clicks'.}
+\item{sumvar}{Variable of focus for analysis. Can provide just a few letters
+as long as they do not match another column in the data. For example,
+could use 'REG' for 'Website Registrations Completed' (case-insensitive).
+Defaults to 'Link Clicks'.}
 
 \item{filtervar}{Limits the analyzed data to only those of a primary group (the first column that appears in Ads Manager like Campaign Name or Ad Set Name)
 matching the provided string of characters (case-insensitive).}
@@ -36,18 +39,25 @@ Best or worst performing subgroups depending on `tblout` parameter. Also a graph
     if grphout parameter is YES.
 }
 \description{
-Reports statistics for breakdown groups (e.g., Age) across ads from Facebook Ads Manager exported data.
- Displays the best and worst performing breakdown groups with a ranking as well as the sum total of a specified event
-    (e.g., 'Website Registrations Completed'). Can also distplay a bar graph showing the cost per specified event for the
-    best breakdown groups along with a summary table comparing those best performers to the data as a whole.
+Reports statistics for breakdown groups (e.g., Age) across
+    ads from Facebook Ads Manager exported data.
+ Displays the best and worst performing breakdown groups with a ranking
+    as well as the sum total of a specified event
+    (e.g., 'Website Registrations Completed'). Can also distplay a bar
+    graph showing the cost per specified event for the best breakdown
+    groups along with a summary table comparing those best performers to
+    the data as a whole.
 }
 \examples{
-## to present a window in which one navigates to the desired CSV file, outputs LINK CLICKS summary by default (Performance and Clicks view suggested)
+\dontrun{
+## to present a window in which one navigates to the desired CSV file, outputs LINK CLICKS summary (Performance and Clicks view suggested in Facebook Ads Manager)
 fbadGstats()
-#' similar but one selects a folder and all of the CSV files are processed, and the summarized performance measure is WEBSITE.LEADS.
+## similar but one selects a folder and all of the CSV files are processed, and the summarized performance measure is WEBSITE.LEADS.
 fbadGstats(choosedir = "YES", sumvar = "WEBSITE.LEADS")
 ## examine the best and worst performing Direct Marketing Areas (DMA) with respect to the results column containing 'REG' (case-insenstive, so this matches Wesbite.Registrations.Completed)
 fbadGstats(filerd='example_DMA.csv', sumvar='REG')
-## see more examples with output
+## see more examples with:
 vignette(package = "fbadstats")
+}
+fbadGstats('example_DMA.csv', sumvar = "CLICKS", filtervar = 'Book', spentlim = 10, minevent = 2, prtrow = 3, tblout = "WORST", graphout = "NO", ctrstats = "NO")
 }

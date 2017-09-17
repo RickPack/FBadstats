@@ -14,18 +14,18 @@ knitr::opts_chunk$set(
 
 # fbadstats
 
-R Package for generating statistics from Facebook ads performance data
-Currently only includes the breakdown Group analyzer function `fbadGstats`
+R Package for generating statistics from Facebook ads performance data.
+Currently only includes the breakdown Group analyzer function `fbadGstats`.
 
 ## Installation
 
-First install the free (open-source) statistical software named "R" at:
+First install the free (open-source) statistical software (and language) named "R" at:
 [http://cran.rstudio.com/](http://cran.rstudio.com/)
 
-Then download the most popular GUI for R, RStudio. The free version will be perfect. Scroll down and choose the appropriate installer under **Installers for Supported Platforms** at:
+Then download the most popular software to make using R easier, RStudio. The free version will be perfect. Scroll down and choose the appropriate installer under **Installers for Supported Platforms** at:
 [https://www.rstudio.com/products/rstudio/download/](https://www.rstudio.com/products/rstudio/download/)
 
-Open RStudio and you can now install the fbadstats package from github by entering the following in RStudio:
+Open RStudio and you can now install the `fbadstats` package from github by entering the following in RStudio:
 ```{r gh-installation, eval = FALSE}
 ## This first package is to enable the install_github function
 install.packages("devtools")
@@ -36,13 +36,12 @@ devtools::install_github("RickPack/fbadstats")
 ```
 
 ## Example
-**Note**: See more examples by entering in RStudio:
-```{r, eval = FALSE}
-vignette(package = "fbadstats")
-```
-
 ```{r example, fig.width = 10, fig.height = 4.5, fig.align = 'center'}
 ## Load fbadstats
 library("fbadstats")
 fbadGstats(filerd = "example_PerfClk_AgeGender.csv", grphout = "YES", tblout = "BEST")
+```
+**Note**: See more examples by entering in RStudio:
+```{r, eval = FALSE}
+vignette(package = "fbadstats")
 ```

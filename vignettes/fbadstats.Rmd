@@ -63,7 +63,7 @@ fbadGstats(filerd = "example_DMA.csv", grphout = "NO", tblout = "WORST", spentli
 ```
 ### Parameter highlight: `prtrow`, `minevent`, `sumvar`
 Finally, the 15 worst with respect to *WEBSITE.REGISTRATIONS.COMPLETED* using the `sumvar` parameter. Notice that the entire column entry does not need to be typed for this case-insensitive parameter. "Regist" was sufficient.
-No limit on the amount spent (i.e., no `minspent` paramter in function call) but at least two *WEBSITE.REGISTRATIONS.COMPLETED* must have occurred.
+No limit on the amount spent (i.e., no `minspent` paramter in function call) but at least two *WEBSITE.REGISTRATIONS.COMPLETED* must have occurred:
 ```{r} 
 fbadGstats(filerd = "example_DMA.csv", grphout = "NO", tblout = "WORST", sumvar = "Regist", prtrow = 15, minevent = 2)
 ```

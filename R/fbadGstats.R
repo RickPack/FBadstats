@@ -1,12 +1,19 @@
 #' Reports statistics across ads from Facebook Ads Manager exported data.
-#' @description Reports statistics for breakdown groups (e.g., Age) across ads from Facebook Ads Manager exported data.
-#'  Displays the best and worst performing breakdown groups with a ranking as well as the sum total of a specified event
-#'     (e.g., 'Website Registrations Completed'). Can also distplay a bar graph showing the cost per specified event for the
-#'     best breakdown groups along with a summary table comparing those best performers to the data as a whole.
+#' @description Reports statistics for breakdown groups (e.g., Age) across
+#'     ads from Facebook Ads Manager exported data.
+#'  Displays the best and worst performing breakdown groups with a ranking
+#'     as well as the sum total of a specified event
+#'     (e.g., 'Website Registrations Completed'). Can also distplay a bar
+#'     graph showing the cost per specified event for the best breakdown
+#'     groups along with a summary table comparing those best performers to
+#'     the data as a whole.
 #' @param filerd Filename to read. Must be a CSV file.
-#' @param choosedir [Windows-Only] If 'YES', prompts the user for a directory / folder in which all CSV files will be processed by fbadGstats.
-#' @param sumvar Variable of focus for analysis. Can provide just a few letters as long as they do not match another column in the data. For example,
-#'     could use 'REG' for 'Website Registrations Completed' (case-insensitive). Defaults to 'Link Clicks'.
+#' @param choosedir [Windows-Only] If 'YES', prompts the user for a directory /
+#'     folder in which all CSV files will be processed by fbadGstats.
+#' @param sumvar Variable of focus for analysis. Can provide just a few letters
+#'     as long as they do not match another column in the data. For example,
+#'     could use 'REG' for 'Website Registrations Completed' (case-insensitive).
+#'     Defaults to 'Link Clicks'.
 #' @param filtervar Limits the analyzed data to only those of a primary group (the first column that appears in Ads Manager like Campaign Name or Ad Set Name)
 #'     matching the provided string of characters (case-insensitive).
 #' @param spentlim Minimum amount that must have been spent in a breakdown group (e.g., DMA Region) in order to appear in the output.
@@ -18,6 +25,7 @@
 #' @return Best or worst performing subgroups depending on `tblout` parameter. Also a graph with a complementary table for the best performers
 #'     if grphout parameter is YES.
 #' @examples
+#' \dontrun{
 #' ## to present a window in which one navigates to the desired CSV file, outputs LINK CLICKS summary (Performance and Clicks view suggested in Facebook Ads Manager)
 #' fbadGstats()
 #' ## similar but one selects a folder and all of the CSV files are processed, and the summarized performance measure is WEBSITE.LEADS.
@@ -26,18 +34,24 @@
 #' fbadGstats(filerd='example_DMA.csv', sumvar='REG')
 #' ## see more examples with:
 #' vignette(package = "fbadstats")
-#' @importFrom ggplot2 ggplot aes scale_x_discrete scale_y_continuous geom_col labs xlab ylab theme element_text ggplotGrob
+#' }
+#' fbadGstats('example_DMA.csv', sumvar = "CLICKS", filtervar = 'Book', spentlim = 10, minevent = 2, prtrow = 3, tblout = "WORST", graphout = "NO", ctrstats = "NO")
+#' @importFrom ggplot2 ggplot aes scale_x_discrete scale_y_continuous geom_col labs xlab ylab theme element_text ggplotGrob geom_text position_dodge
 #' @importFrom gridExtra grid.arrange tableGrob ttheme_minimal arrangeGrob
 #' @importFrom stringr str_c str_to_upper str_subset str_trim
 #' @importFrom dplyr select %>% as_tibble pull filter contains quo group_by summarize mutate_if funs distinct arrange min_rank left_join inner_join mutate slice trunc_mat tbl_df
+#' @importFrom xtable xtable
 #' @export
 fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "", filtervar = "", spentlim = 0, minevent = 0, prtrow = 20, tblout = "BOTH", grphout = "YES", ctrstats = "NO") {
    ## Reminder to clean-up code regularly with:
     # formatR::tidy_dir('R')
+    # https://rpubs.com/TimSch1/64289
+    # Yihui personal website https://support.rbind.io/2017/04/25/yihui-website/
+    # ggplot2 two-line https://stackoverflow.com/questions/13223846/ggplot2-two-line-label-with-expression
 
     # default to assuming user will not use one of the two provided example CSV files
     example <- 0
-    # present early in package development R instance so may be critical
+    # present early in package development so may be critical
     origoptFact <- getOption("stringsAsFactors")
     options(stringsAsFactors=FALSE)
 
@@ -66,6 +80,7 @@ fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "", filtervar = "
         tblout <- toupper(tblout)
         grphout <- toupper(grphout)
 
+     # invalid parameter checks - used in testparam.R
         if (grphout == "YES" | grphout == TRUE) {
             grphoutTF <- TRUE
         } else if (grphout == "NO" | grphout == FALSE) {
@@ -77,9 +92,15 @@ fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "", filtervar = "
             stop("Invalid tblout value provided. Please specify one of the following: BEST  WORST  BOTH  NONE")
         }
 
+        if (spentlim < 0) {
+          stop("Negative value specified for spentlim parameter.")
+        }
+
         if (filein == "") {
             filein <- choose.files(caption = "Select a .CSV file exported from Facebook Ads Manager.")
         }
+
+
 
         if (example == 1) {
             dmafb <- data.frame(read.csv(a_file_path))
@@ -269,7 +290,7 @@ fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "", filtervar = "
             print(trunc_mat(tbl_df(sumevtavg[1:prtrow, ]))$table)
         }
         grpvarprt <- gsub("[.]", " ", as.character(grpvar[2]))
-        print(paste("Number of regions in all of data: ", length(unique(dmasum %>% pull(!!grpvar))), sep = ""))
+        print(paste("Number of groups in all of data: ", length(unique(dmasum %>% pull(!!grpvar))), sep = ""))
         if (exists("sumnam")) {
             print(paste("Number of ", grpvarprt, " groups with at least one ", sumprtvar, " and minimum spend of $", spentlim, " = ", length(unique(dmasum2 %>% pull(!!grpvar))), sep = ""))
         } else {
@@ -287,9 +308,11 @@ fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "", filtervar = "
             medtop <- round(median(statset$costevt), 1)
             medall <- round(median(sumevtavg_gt0$costevt), 1)
             medspent <- round(median(statset$sumspent))
-            plotforms <- ggplot(statset) + aes(x = (statset %>% pull(!!grpvar)), y = costevt, fill = (statset %>% pull(!!grpvar))) + scale_x_discrete(limits = statset %>% pull(!!grpvar)) + scale_y_continuous(labels = scales::dollar) +
+            plotforms <- ggplot(statset) + aes(x = (statset %>% pull(!!grpvar)), y = costevt, fill = (statset %>% pull(!!grpvar))) +
+              scale_x_discrete(limits = statset %>% pull(!!grpvar)) + scale_y_continuous(labels = scales::dollar) +
                 geom_col(show.legend = FALSE) + labs(title = paste("Facebook Ads Analysis for ", sumnam, ": Created on  ", todaydt, sep = ""), caption = paste("Data from ", file_nam, sep = "")) + theme(plot.title = element_text(hjust = 0.5)) +
-                xlab(str_c("Best performing (lowest cost) ", grpvarprt)) + ylab(str_c("Cost per ", sumnam))
+                xlab(str_c("Best performing (lowest cost) ", grpvarprt)) + ylab(str_c("Cost per ", sumnam)) +
+                geom_text(aes(label = paste0("$",costevt)), vjust = 0)
             plotformsG <- ggplotGrob(plotforms)
             extrainfo <- paste("Median cost (all) only considers where there was\nat least one ", sumnam, sep = "")
             stat_tbl <- data.frame(medtop, medall, medspent, spentlim, extrainfo)
