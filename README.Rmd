@@ -14,8 +14,7 @@ knitr::opts_chunk$set(
 
 # fbadstats
 
-R Package for generating statistics from Facebook ads performance data.
-Currently only includes the breakdown Group analyzer function `fbadGstats`.
+R Package for generating statistics from Facebook ads performance data. Currently only includes the breakdown Group analyzer function `fbadGstats`.
 
 ## Installation
 
@@ -35,11 +34,29 @@ library("devtools")
 devtools::install_github("RickPack/fbadstats")
 ```
 
-## Example
+## Example 1/n
 ```{r example, fig.width = 10, fig.height = 4.5, fig.align = 'center'}
 ## Load fbadstats
 library("fbadstats")
-fbadGstats(filerd = "example_PerfClk_AgeGender.csv", grphout = "YES", tblout = "BEST")
+# Show only the best performing groups and include the graphical output
+fbadGstats(filerd = "example_DMA.csv", grphout = "YES", tblout = "BEST")
+```
+## For A:B comparison, use the filtervar parameter. 
+## Here we see BOTH [default for tblout parameter] the top 3 and worst 3 Age / Gender groups in a comparison between where "6txt" did and did not appear in the ad set name
+## At least two events (clicks) must have occurred. Otherwise an anomalous single event for 25-34 males causes that group to appear.
+## "Hotreg" indicated where selected regions with a history of performing well were the only ones targeted with the advertisement
+```{r example, fig.width = 10, fig.height = 4.5, fig.align = 'center'}
+fbadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervar = 'hotreg',    prtrow = 3, minevent = 2, grphout = "NO")
+fbadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervarneg = 'hotreg', prtrow = 3, minevent = 2,   grphout = "NO")
+```
+## Assign fbadGstats call to a variable in order to explore the data outside of fbadGstats
+```{r example, fig.width = 10, fig.height = 4.5, fig.align = 'center'}
+myfbfrm <- fbadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervar = 'AllPg', grphout = "NO")
+## What are all of the available ad set names?
+# 1. First look at the column names in the data
+colnames(myfbfrm)
+# 2. Now we can use the unique function to see all of the available names and appropriately adjust the filtervar parameter
+unique(myfrmfrm$Ad.Set.Name)
 ```
 **Note**: See more examples by entering in RStudio:
 ```{r, eval = FALSE}

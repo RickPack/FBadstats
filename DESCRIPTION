@@ -1,7 +1,7 @@
 Package: fbadstats
 Type: Package
 Title: Analyze Facebook Ads Performance Data Exported From Ads Manager
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: as.person(c("Rick Pack <rick@impackt2solutions.com> [aut, cre]"))
 BugReports: https://github.com/RickPack/fbadstats/issues
 Description: fbadstats currently has only one function, *fbadGstats*. *fbadGstats* aggregates data in CSV files exported from Facebook Ads Manager and displays the best and worst performing breakdown groups for specified variables

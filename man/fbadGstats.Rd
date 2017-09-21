@@ -5,8 +5,8 @@
 \title{Reports statistics across ads from Facebook Ads Manager exported data.}
 \usage{
 fbadGstats(filerd = "", choosedir = "NO", sumvar = "", filtervar = "",
-  spentlim = 0, minevent = 0, prtrow = 20, tblout = "BOTH",
-  grphout = "YES", ctrstats = "NO")
+  filtervarneg = "", spentlim = 0, minevent = 0, prtrow = 20,
+  tblout = "BOTH", grphout = "YES", ctrstats = "NO")
 }
 \arguments{
 \item{filerd}{Filename to read. Must be a CSV file.}
@@ -19,23 +19,36 @@ as long as they do not match another column in the data. For example,
 could use 'REG' for 'Website Registrations Completed' (case-insensitive).
 Defaults to 'Link Clicks'.}
 
-\item{filtervar}{Limits the analyzed data to only those of a primary group (the first column that appears in Ads Manager like Campaign Name or Ad Set Name)
+\item{filtervar}{Limits the analyzed data to only those of a primary group
+(the first column that appears in Ads Manager like Campaign Name or
+Ad Set Name)
 matching the provided string of characters (case-insensitive).}
 
-\item{spentlim}{Minimum amount that must have been spent in a breakdown group (e.g., DMA Region) in order to appear in the output.}
+\item{filtervarneg}{Same as filtervar but negates (excludes) the value.}
 
-\item{minevent}{Minimum number of 'events' (e.g., Link Clicks) that must have occurred in order for a breakdown group to appear in the output.}
+\item{spentlim}{Minimum amount spent in a breakdown group (e.g., DMA Region)
+in order to appear in the output.}
 
-\item{prtrow}{Number of breakdown groups that will appear in the output, both the best and worst will appear separately. Default = 20.}
+\item{minevent}{Minimum number of 'events' (e.g., Link Clicks) that must
+have occurred in order for a breakdown group to appear in the output.}
 
-\item{tblout}{Show the best, worst, or both in the output? Valid values are: BEST , WORST , BOTH}
+\item{prtrow}{Number of breakdown groups that will appear in the output,
+both the best and worst will appear separately. Default = 20.}
 
-\item{grphout}{Show the bar graph and summary table of price / event (e.g., Link Clicks) for the best performers vs. all of data? Valid values are: YES or NO}
+\item{tblout}{Show the best, worst, or both in the output? Valid values
+are: BEST , WORST , BOTH}
 
-\item{ctrstats}{If yes, prints statistics for clickthrough rate if available in data (CTR) - defaults to NO. Valid values are : YES, NO. Prioritizes CTR..LINK.CLICK.THROUGH.RATE.}
+\item{grphout}{Show the bar graph and summary table of price / event
+(e.g., Link Clicks) for the best performers vs. all of data?
+Valid values are: YES or NO}
+
+\item{ctrstats}{If yes, prints statistics for clickthrough rate if
+available in data (CTR) - defaults to NO. Valid values are : YES, NO.
+Prioritizes CTR..LINK.CLICK.THROUGH.RATE.}
 }
 \value{
-Best or worst performing subgroups depending on `tblout` parameter. Also a graph with a complementary table for the best performers
+Best or worst performing subgroups depending on `tblout` parameter.
+   Also a graph with a complementary table for the best performers
     if grphout parameter is YES.
 }
 \description{
@@ -50,14 +63,21 @@ Reports statistics for breakdown groups (e.g., Age) across
 }
 \examples{
 \dontrun{
-## to present a window in which one navigates to the desired CSV file, outputs LINK CLICKS summary (Performance and Clicks view suggested in Facebook Ads Manager)
+# to present a window in which one navigates to the desired CSV file,
+# outputs LINK CLICKS summary
+# (Performance and Clicks view suggested in Facebook Ads Manager)
 fbadGstats()
-## similar but one selects a folder and all of the CSV files are processed, and the summarized performance measure is WEBSITE.LEADS.
+# similar but one selects a folder and all of the CSV files are processed,
+# and the summarized performance measure is WEBSITE.LEADS.
 fbadGstats(choosedir = "YES", sumvar = "WEBSITE.LEADS")
-## examine the best and worst performing Direct Marketing Areas (DMA) with respect to the results column containing 'REG' (case-insenstive, so this matches Wesbite.Registrations.Completed)
+# examine the best and worst performing Direct Marketing Areas (DMA) with
+# respect to the results column containing 'REG' (case-insenstive,
+# so this exampled matched 'Website.Registrations.Completed')
 fbadGstats(filerd='example_DMA.csv', sumvar='REG')
-## see more examples with:
+# see more examples with:
 vignette(package = "fbadstats")
 }
-fbadGstats('example_DMA.csv', sumvar = "CLICKS", filtervar = 'Book', spentlim = 10, minevent = 2, prtrow = 3, tblout = "WORST", graphout = "NO", ctrstats = "NO")
+fbadGstats('example_DMA.csv', sumvar = "CLICKS", filtervar = 'Book',
+            spentlim = 10, minevent = 2, prtrow = 3, tblout = "WORST",
+            graphout = "NO", ctrstats = "NO")
 }
