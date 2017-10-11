@@ -1,3 +1,3 @@
-library(testthat)
-library(fbadstats)
-test_check("fbadstats")
+#library(testthat)
+#library(fbadstats)
+#test_check("fbadstats")

@@ -76,8 +76,8 @@ fbadGstats(choosedir = "YES", sumvar = "WEBSITE.LEADS")
 fbadGstats(filerd='example_DMA.csv', sumvar='REG')
 # see more examples with:
 vignette(package = "fbadstats")
-}
 fbadGstats('example_DMA.csv', sumvar = "CLICKS", filtervar = 'Book',
             spentlim = 10, minevent = 2, prtrow = 3, tblout = "WORST",
             graphout = "NO", ctrstats = "NO")
+}
 }
