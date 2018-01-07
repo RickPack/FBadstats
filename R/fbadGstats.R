@@ -50,7 +50,7 @@
 #' # so this exampled matched 'Website.Registrations.Completed')
 #' fbadGstats(filerd='example_DMA.csv', sumvar='REG')
 #' # see more examples with:
-#' vignette(package = "fbadstats")
+#' vignette(package = "FBadstats")
 #' fbadGstats('example_DMA.csv', sumvar = "CLICKS", filtervar = 'Book',
 #'             spentlim = 10, minevent = 2, prtrow = 3, tblout = "WORST",
 #'             graphout = "NO", ctrstats = "NO")
@@ -95,7 +95,7 @@ fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
        file_nam <- basename(filein)
 
        if (filein %in% c("example_PerfClk_AgeGender.csv", "example_DMA.csv")) {
-           a_file_path <- system.file("extdata", filein, package = "fbadstats")
+           a_file_path <- system.file("extdata", filein, package = "FBadstats")
            example <- 1
         }
 

@@ -14,7 +14,7 @@ curwid <- getOption('width')
 options(width = 750)
 ```
 
-The `fbadGstats` function aggregates across all of the Facebook (FB) ads performance data one provides from FB Ads Manager and indicates the best and worst performers per subgroup / breakdown group. *Disclaimer: This function and the entire `fbadstats` package are not supported or endorsed by Facebook, Inc. Only the user is responsible for its use.*
+The `fbadGstats` function aggregates across all of the Facebook (FB) ads performance data one provides from FB Ads Manager and indicates the best and worst performers per subgroup / breakdown group. *Disclaimer: This function and the entire `FBadstats` package are not supported or endorsed by Facebook, Inc. Only the user is responsible for its use.*
 
 ## How to use `fbadGstats`
 
@@ -25,10 +25,10 @@ The "PerfClk" in the name indicates that the "Performance and Clicks" view was u
 ### Show only the table output (not a graph and its complementing table):
 Setting the `tblout` parameter to BOTH causes the best and worst performers to appear in the table
 **Note:** The filerd parameter, if used, must have the full path to a CSV file with slashes, not backslashes (e.g., `filerd` = *'c:/users/Users/RickPack/Documents/R/LeadData.csv'*).
-    Example files included with the `fbadstats` package are exceptions.
+    Example files included with the `FBadstats` package are exceptions.
 ```{r, message=FALSE}
 ## load the package
-library(fbadstats)
+library(FBadstats)
 ## now call the function and provide parameters as desired
 fbadGstats(filerd = "example_PerfClk_AgeGender.csv", grphout = "NO", tblout = "BOTH")
 ```

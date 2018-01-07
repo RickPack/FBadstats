@@ -2,7 +2,7 @@
 output: github_document
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- README.md is generated from README.Rmd. Please edit this file -->
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(
@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# fbadstats
+# FBadstats
 
 R Package for generating statistics from Facebook ads performance data. Currently only includes the breakdown Group analyzer function `fbadGstats`.
 
@@ -24,20 +24,20 @@ First install the free (open-source) statistical software (and language) named "
 Then download the most popular software to make using R easier, RStudio. The free version will be perfect. Scroll down and choose the appropriate installer under **Installers for Supported Platforms** at:
 [https://www.rstudio.com/products/rstudio/download/](https://www.rstudio.com/products/rstudio/download/)
 
-Open RStudio and you can now install the `fbadstats` package from github by entering the following in RStudio:
+Open RStudio and you can now install the `FBadstats` package from github by entering the following in RStudio:
 ```{r gh-installation, eval = FALSE}
 ## This first package is to enable the install_github function
 install.packages("devtools")
 ## Now we can always load that package with
 library("devtools")
-## Install fbadstats
-devtools::install_github("RickPack/fbadstats")
+## Install FBadstats
+devtools::install_github("RickPack/FBadstats")
 ```
 
 ## Example 1/n
 ```{r example, fig.width = 10, fig.height = 4.5, fig.align = 'center'}
-## Load fbadstats
-library("fbadstats")
+## Load FBadstats
+library("FBadstats")
 # Show only the best performing groups and include the graphical output
 fbadGstats(filerd = "example_DMA.csv", grphout = "YES", tblout = "BEST")
 ```
@@ -60,5 +60,5 @@ unique(myfrmfrm$Ad.Set.Name)
 ```
 **Note**: See more examples by entering in RStudio:
 ```{r, eval = FALSE}
-vignette(package = "fbadstats")
+vignette(package = "FBadstats")
 ```
