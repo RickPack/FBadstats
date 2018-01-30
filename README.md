@@ -47,7 +47,8 @@ For A/B testing, use the filtervar parameter.
 Here we see BOTH \[default for tblout parameter\] the top 3 and worst 3 Age / Gender groups in a comparison between where "6txt" did and did not appear in the ad set name.
 At least two events (clicks) must have occurred. Otherwise an anomalous single event for 25-34 males causes that group to appear.
 "Hotreg" indicated where selected regions with a history of performing well were the only ones targeted with the advertisement.
-\#\#\# Example 2/3
+
+### Example 2/3
 
 ``` r
 fbadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervar = 'hotreg',    prtrow = 3, minevent = 2, grphout = "NO")

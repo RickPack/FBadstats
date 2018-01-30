@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 
 # FBadstats
 
-R Package for generating statistics from Facebook ads performance data. Currently only includes the breakdown Group analyzer function `fbadGstats`.
+R Package for generating statistics from Facebook ads performance data. Assists with ad targeting by aggregating data across multiple ad sets or campaigns in an attractive way. Currently only includes the breakdown Group analyzer function `fbadGstats`.
 
 ## Installation
 
@@ -46,6 +46,7 @@ fbadGstats(filerd = "example_DMA.csv", grphout = "YES", tblout = "BEST")
 Here we see BOTH [default for tblout parameter] the top 3 and worst 3 Age / Gender groups in a comparison between where "6txt" did and did not appear in the ad set name.  
 At least two events (clicks) must have occurred. Otherwise an anomalous single event for 25-34 males causes that group to appear.  
 "Hotreg" indicated where selected regions with a history of performing well were the only ones targeted with the advertisement.  
+
 ### Example 2/3
 ```{r example2, fig.width = 10, fig.height = 4.5, fig.align = 'center'}
 fbadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervar = 'hotreg',    prtrow = 3, minevent = 2, grphout = "NO")
@@ -53,6 +54,7 @@ fbadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervarneg = 'hotreg', pr
 ```
 
 ## Assign fbadGstats call to a variable in order to explore the data outside of fbadGstats
+
 ### Example 3/3
 ```{r example3, fig.width = 10, fig.height = 4.5, fig.align = 'center'}
 myfbfrm <- fbadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervar = 'AllPg', grphout = "NO")
@@ -62,6 +64,7 @@ colnames(myfbfrm)
 # 2. Now we can use the unique function to see all of the available names and appropriately adjust the filtervar parameter
 unique(myfbfrm$AD.SET.NAME)
 ```
+
 **Note**: See more examples by entering in RStudio:
 ```{r, eval = FALSE}
 vignette(package = "FBadstats")
