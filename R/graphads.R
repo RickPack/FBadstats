@@ -51,8 +51,7 @@ graphads <- function(dmastat_all, prtrow, grpvar, grpvarprt, sumnam, todaydt, fi
     geom_text(aes(label = paste0("$",costevt,"; Spent = $",
                                  sumspent)), vjust = 0, size = 03)
   plotformsG <- ggplotGrob(plotforms)
-  extrainfo <- paste("Median cost (all) only considers where
-                     there was\nat least one ", sumnam, sep = "")
+  extrainfo <- paste("Median cost (all) only considers where there was at least one ", sumnam, sep = "")
   stat_tbl <- data.frame(medtop, medall, medspent,
                          spentlim, extrainfo)
   colnames(stat_tbl) <- c(str_c("Median cost\nper '", sumprtvar,
