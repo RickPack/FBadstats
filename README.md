@@ -23,8 +23,7 @@ library("devtools")
 devtools::install_github("RickPack/FBadstats")
 ```
 
-Example 1/3
------------
+### Example 1/3
 
 ``` r
 ## Load FBadstats
@@ -40,7 +39,15 @@ fbadGstats(filerd = "example_DMA.csv", grphout = "YES", tblout = "BEST")
 #> [1] "Total amount spent: $320.47"
 ```
 
-<img src="README-example1-1.png" style="display: block; margin: auto;" /> \#\# For A:B comparison, use the filtervar parameter. \#\# Here we see BOTH \[default for tblout parameter\] the top 3 and worst 3 Age / Gender groups in a comparison between where "6txt" did and did not appear in the ad set name \#\# At least two events (clicks) must have occurred. Otherwise an anomalous single event for 25-34 males causes that group to appear. \#\# "Hotreg" indicated where selected regions with a history of performing well were the only ones targeted with the advertisement \#\# Example 2/3
+<img src="README-example1-1.png" style="display: block; margin: auto;" />
+
+For A/B testing, use the filtervar parameter.
+---------------------------------------------
+
+Here we see BOTH \[default for tblout parameter\] the top 3 and worst 3 Age / Gender groups in a comparison between where "6txt" did and did not appear in the ad set name.
+At least two events (clicks) must have occurred. Otherwise an anomalous single event for 25-34 males causes that group to appear.
+"Hotreg" indicated where selected regions with a history of performing well were the only ones targeted with the advertisement.
+\#\#\# Example 2/3
 
 ``` r
 fbadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervar = 'hotreg',    prtrow = 3, minevent = 2, grphout = "NO")
@@ -66,8 +73,7 @@ fbadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervarneg = 'hotreg', pr
 Assign fbadGstats call to a variable in order to explore the data outside of fbadGstats
 ---------------------------------------------------------------------------------------
 
-Example 3/3
------------
+### Example 3/3
 
 ``` r
 myfbfrm <- fbadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervar = 'AllPg', grphout = "NO")
