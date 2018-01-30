@@ -30,7 +30,7 @@ graphads <- function(dmastat_all, prtrow, grpvar, grpvarprt, sumnam, todaydt, fi
   medspent <- round(median(statset$sumspent))
   plotforms <- ggplot(statset) +
     aes(x = (statset %>% pull(!!grpvar)),
-        y = costevt,
+        y = costevt, size = 06,
         fill = (statset %>% pull(!!grpvar))) +
     scale_x_discrete(limits = statset %>%
                        pull(!!grpvar)) +
@@ -43,12 +43,13 @@ graphads <- function(dmastat_all, prtrow, grpvar, grpvarprt, sumnam, todaydt, fi
          caption = paste("Data from ",
                          file_nam,
                          sep = "")) +
-    theme(plot.title =
-            element_text(hjust = 0.5)) +
+    theme(plot.title = element_text(hjust = 0.5),
+          legend.position="none",
+          text = element_text(size = 08)) +
     xlab(str_c("Best performing (lowest cost) ", grpvarprt)) +
     ylab(str_c("Cost per ", sumnam)) +
     geom_text(aes(label = paste0("$",costevt,"; Spent = $",
-                                 sumspent)), vjust = 0)
+                                 sumspent)), vjust = 0, size = 03)
   plotformsG <- ggplotGrob(plotforms)
   extrainfo <- paste("Median cost (all) only considers where
                      there was\nat least one ", sumnam, sep = "")
@@ -59,7 +60,7 @@ graphads <- function(dmastat_all, prtrow, grpvar, grpvarprt, sumnam, todaydt, fi
                           "Median amount spent\n",
                           "(graphed best performers)",
                           "(spentlim parameter)", "INFO:")
-  tt <- ttheme_minimal(base_size = 10)
+  tt <- ttheme_minimal(base_size = 08)
   # print without print function to avoid undesired extraneous output
   grid.arrange(grobs = list(plotforms,
                             tableGrob(stat_tbl, theme = tt,
