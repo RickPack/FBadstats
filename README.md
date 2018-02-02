@@ -1,9 +1,9 @@
 
-<!-- README.md is generated from README.Rmd. Please edit this file -->
 FBadstats
 =========
 
 R Package for generating statistics from Facebook ads performance data. Assists with ad targeting by aggregating data across multiple ad sets or campaigns in an attractive way. Currently only includes the breakdown Group analyzer function `fbadGstats`.
+*Disclaimer: This function and the entire `FBadstats` package are not supported or endorsed by Facebook, Inc. Only the user is responsible for its use.*
 
 Installation
 ------------
