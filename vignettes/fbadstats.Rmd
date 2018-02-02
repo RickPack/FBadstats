@@ -28,14 +28,18 @@ library(FBadstats)
 ```{r, message=FALSE, eval=FALSE}
 fbadGstats()
 ```
+
 ## Select your file
 ![Windows Explorer file-selection](README-selectCSV.png)
+
 ## Use the output
 ![Portion of fbadGstats output](README-example.png)
+
 You can select a folder and process all of the .CSV files with:
 ```{r, message=FALSE, eval=FALSE}
 fbadGstats(choosedir="YES")
 ```
+
 #### Advanced use - use one of the >10 parameters
 We will first use the included **example_PerfClk_AgeGender** CSV file that represents exported data from ads dedicated to acquiring "Leads" (email addresses for potential customers AKA "an email funnel").
 

@@ -25,9 +25,10 @@ devtools::install_github("RickPack/FBadstats")
 
 #### Easiest use - select a file or folder
 
-The easiest use is to call the function, navigate to your exported CSV file and then select it. The default parameters may give you all you need. \#\# Call the function
+The easiest use is to call the function, navigate to your exported CSV file and then select it. The default parameters may give you all you need.
 
-    #> [1] "C:/Users/Packr1/Documents/Personal/fbadstats"
+Call the function
+-----------------
 
 ``` r
 fbadGstats()
@@ -36,7 +37,14 @@ fbadGstats()
 Select your file
 ----------------
 
-![Windows Explorer file-selection](README-selectCSV.png) \#\# Use the output ![Portion of fbadGstats output](README-exampleout.png) You can select a folder and process all of the .CSV files with:
+![Windows Explorer file-selection](README-selectCSV.png)
+
+Use the output
+--------------
+
+![Portion of fbadGstats output](README-exampleout.png)
+
+You can select a folder and process all of the .CSV files with:
 
 ``` r
 fbadGstats(choosedir="YES")
