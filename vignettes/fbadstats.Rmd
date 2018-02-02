@@ -7,6 +7,7 @@ vignette: >
   %\VignetteIndexEntry{fbadGstats examples}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  \usepackage[utf8]{inputenc}
 ---
 ```{r set-options, echo=FALSE, cache=FALSE}
 ## save current width option, set to a large value, then resets back at end of code
