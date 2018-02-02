@@ -72,6 +72,7 @@ fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
     # two provided example CSV files
     example <- 0
     # present early in package development so may be critical
+    # restores original Option at the bottom of code
     origoptFact <- getOption("stringsAsFactors")
     options(stringsAsFactors=FALSE)
     # print today's date on the graph later
@@ -351,23 +352,23 @@ fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
             if (tblout %in% c("WORST", "BOTH")) {
                 sumctravg <- arrange(dmastat_all, rnkctravg)
                 print(str_c("WORST: ", ctrnam, " in ", file_nam))
-                print(trunc_mat(tbl_df(sumctravg[1:prtrow, ]))$table)
+                print(data.frame(sumctravg[1:prtrow, ]))
             }
             if (tblout %in% c("BEST", "BOTH")) {
                 sumctravg <- arrange(dmastat_all, desc(rnkctravg))
                 print(str_c("BEST: ", ctrnam, " in ", file_nam))
-                print(trunc_mat(tbl_df(sumctravg[1:prtrow, ]))$table)
+                print(data.frame(sumctravg[1:prtrow, ]))
             }
         }
         if (tblout %in% c("WORST", "BOTH")) {
             sumevtavg <- arrange(dmastat_all, desc(rnkevt))
             print(str_c("WORST: ", sumprtvar, " in ", file_nam))
-            print(trunc_mat(sumevtavg[1:prtrow, ])$table)
+            print(data.frame(sumevtavg[1:prtrow, ]))
         }
         if (tblout %in% c("BEST", "BOTH")) {
             sumevtavg <- arrange(dmastat_all, rnkevt)
             print(str_c("BEST: ", sumprtvar, " in ", file_nam))
-            print(trunc_mat(tbl_df(sumevtavg[1:prtrow, ]))$table)
+            print(data.frame(sumevtavg[1:prtrow, ]))
         }
         grpvarprt <- gsub("[.]", " ", as.character(grpvar[2]))
         print(paste("Number of groups in all of data: ",
