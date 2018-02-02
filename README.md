@@ -23,12 +23,30 @@ library("devtools")
 devtools::install_github("RickPack/FBadstats")
 ```
 
-### Example 1/3
+#### Easiest use - select a file or folder
+
+The easiest use is to call the function, navigate to your exported CSV file and then select it. The default parameters may give you all you need. \#\# Call the function
+
+    #> [1] "C:/Users/Packr1/Documents/Personal/fbadstats"
+
+``` r
+fbadGstats()
+```
+
+Select your file
+----------------
+
+![Windows Explorer file-selection](README-selectCSV.png) \#\# Use the output ![Portion of fbadGstats output](README-exampleout.png) You can select a folder and process all of the .CSV files with:
+
+``` r
+fbadGstats(choosedir="YES")
+```
+
+### Advanced Example 1/3
 
 ``` r
 ## Load FBadstats
 library("FBadstats")
-#> FB Ads Analysis tool: 'fbadGstats' - Breakdown Group analysis function
 # Show only the best performing groups and include the graphical output
 fbadGstats(filerd = "example_DMA.csv", grphout = "YES", tblout = "BEST")
 #> [1] "-------------------------------------------------------------"
@@ -68,7 +86,7 @@ Here we see BOTH \[default for tblout parameter\] the top 3 and worst 3 Age / Ge
 At least two events (clicks) must have occurred. Otherwise an anomalous single event for 25-34 males causes that group to appear.
 "Hotreg" indicated where selected regions with a history of performing well were the only ones targeted with the advertisement.
 
-### Example 2/3
+### Advanced Example 2/3
 
 ``` r
 fbadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervar = 'hotreg',    prtrow = 3, minevent = 2, grphout = "NO")
@@ -106,7 +124,7 @@ fbadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervarneg = 'hotreg', pr
 Assign fbadGstats call to a variable in order to explore the data outside of fbadGstats
 ---------------------------------------------------------------------------------------
 
-### Example 3/3
+### Advanced Example 3/3
 
 ``` r
 myfbfrm <- fbadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervar = 'AllPg', grphout = "NO")
