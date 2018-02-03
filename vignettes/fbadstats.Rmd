@@ -17,10 +17,10 @@ options(width = 750)
 
 The `fbadGstats` function aggregates across all of the Facebook (FB) ads performance data one provides from FB Ads Manager and indicates the best and worst performers per subgroup / breakdown group. *Disclaimer: This function and the entire `FBadstats` package are not supported or endorsed by Facebook, Inc. Only the user is responsible for its use.*
 
-## How to use `fbadGstats`
-#### Easiest use - select a file or folder
+# How to use `fbadGstats`
+## Easiest use - select a file or folder
 The easiest use is to call the function, navigate to your exported CSV file and then select it. The default parameters may give you all you need.
-## Call the function
+### Call the function
 ```{r, message=FALSE, echo=FALSE}
 ## load the package
 library(FBadstats)
@@ -29,10 +29,10 @@ library(FBadstats)
 fbadGstats()
 ```
 
-## Select your file
+### Select your file
 ![Windows Explorer file-selection](README-selectCSV.png)
 
-## Use the output
+### Use the output
 ![Portion of fbadGstats output](README-example.png)
 
 You can select a folder and process all of the .CSV files with:
@@ -40,7 +40,7 @@ You can select a folder and process all of the .CSV files with:
 fbadGstats(choosedir="YES")
 ```
 
-#### Advanced use - use one of the >10 parameters
+## Advanced use - use one of the >10 parameters
 We will first use the included **example_PerfClk_AgeGender** CSV file that represents exported data from ads dedicated to acquiring "Leads" (email addresses for potential customers AKA "an email funnel").
 
 The "PerfClk" in the name indicates that the "Performance and Clicks" view was used in Ads Manager at the time of the export, which is the best view to first try - others may fail. I will add to the error messages over time so one better understands why a view failed, and a view may succeed as the function evolves. The "AgeGender" in the filename expresses that the selected breakdown was a *combination* of age and gender.
@@ -49,7 +49,8 @@ The "PerfClk" in the name indicates that the "Performance and Clicks" view was u
 Setting the `tblout` parameter to BOTH causes the best and worst performers to appear in the table
 **Note:** The filerd parameter, if used, must have the full path to a CSV file with slashes, not backslashes (e.g., `filerd` = *'c:/users/Users/RickPack/Documents/R/LeadData.csv'*).
     Example files included with the `FBadstats` package are exceptions.
-## now call the function and provide parameters as desired
+### now call the function and provide parameters as desired
+```{r, message=FALSE, eval=FALSE}
 fbadGstats(filerd = "example_PerfClk_AgeGender.csv", grphout = "NO", tblout = "BOTH")
 ```
 ### Show only the best breakdown groups in the table:
