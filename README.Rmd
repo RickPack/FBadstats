@@ -89,3 +89,6 @@ unique(myfbfrm$AD.SET.NAME)
 ```{r, eval = FALSE}
 vignette(package = "FBadstats")
 ```
+
+#### Acknowledgements
+Thank you to [Brian Fannin](http://pirategrunt.com/blog/), [Ari Lamstein](https://www.arilamstein.com/blog/), and [Lucia Gjeltema](http://ncdata4good.github.io/UWchallenge/recap.html) for your feedback and encouragement.

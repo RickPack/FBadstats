@@ -23,24 +23,22 @@ library("devtools")
 devtools::install_github("RickPack/FBadstats")
 ```
 
-#### Easiest use - select a file or folder
+Easiest use - select a file or folder
+-------------------------------------
 
 The easiest use is to call the function, navigate to your exported CSV file and then select it. The default parameters may give you all you need.
 
-Call the function
------------------
+### Call the function
 
 ``` r
 fbadGstats()
 ```
 
-Select your file
-----------------
+### Select your file
 
 ![Windows Explorer file-selection](README-selectCSV.png)
 
-Use the output
---------------
+### Use the output
 
 ![Portion of fbadGstats output](README-exampleout.png)
 
@@ -49,6 +47,9 @@ You can select a folder and process all of the .CSV files with:
 ``` r
 fbadGstats(choosedir="YES")
 ```
+
+Advanced usage - modifying parameters
+-------------------------------------
 
 ### Advanced Example 1/3
 
@@ -87,8 +88,7 @@ fbadGstats(filerd = "example_DMA.csv", grphout = "YES", tblout = "BEST")
 
 <img src="README-example1-1.png" style="display: block; margin: auto;" />
 
-For A/B testing, use the filtervar parameter.
----------------------------------------------
+### For A/B testing, use the filtervar parameter.
 
 Here we see BOTH \[default for tblout parameter\] the top 3 and worst 3 Age / Gender groups in a comparison between where "6txt" did and did not appear in the ad set name.
 At least two events (clicks) must have occurred. Otherwise an anomalous single event for 25-34 males causes that group to appear.
@@ -129,10 +129,7 @@ fbadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervarneg = 'hotreg', pr
 #> [1] "Total amount spent: $258.62"
 ```
 
-Assign fbadGstats call to a variable in order to explore the data outside of fbadGstats
----------------------------------------------------------------------------------------
-
-### Advanced Example 3/3
+### Advanced Example 3/3 (Assign fbadGstats call to a variable in order to explore the data outside of fbadGstats)
 
 ``` r
 myfbfrm <- fbadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervar = 'AllPg', grphout = "NO")
@@ -177,3 +174,7 @@ unique(myfbfrm$AD.SET.NAME)
 ``` r
 vignette(package = "FBadstats")
 ```
+
+#### Acknowledgements
+
+Thank you to [Brian Fannin](http://pirategrunt.com/blog/), [Ari Lamstein](https://www.arilamstein.com/blog/), and [Lucia Gjeltema](http://ncdata4good.github.io/UWchallenge/recap.html) for your feedback and encouragement.

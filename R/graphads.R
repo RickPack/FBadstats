@@ -55,10 +55,11 @@ graphads <- function(dmastat_all, prtrow, grpvar, grpvarprt, sumnam, todaydt, fi
   stat_tbl <- data.frame(medtop, medall, medspent,
                          spentlim, extrainfo)
   colnames(stat_tbl) <- c(str_c("Median cost\nper '", sumprtvar,
-                                "'\n for (all)"),
-                          "Median amount spent\n",
-                          "(graphed best performers)",
-                          "(spentlim parameter)", "INFO:")
+                                "' for\n(graphed best performers)"),
+                          str_c("Median cost\nper '", sumprtvar,
+                                "' for\n(all)"),
+                          "Median amount spent\namong\n(graphed best performers)",
+                          "Minimum $ spent\nto appear?\n(spentlim parameter)", "INFO:")
   tt <- ttheme_minimal(base_size = 08)
   # print without print function to avoid undesired extraneous output
   grid.arrange(grobs = list(plotforms,
