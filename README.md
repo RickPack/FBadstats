@@ -88,9 +88,9 @@ fbadGstats(filerd = "example_DMA.csv", grphout = "YES", tblout = "BEST")
 
 <img src="README-example1-1.png" style="display: block; margin: auto;" />
 
-### For A/B testing, use the filtervar parameter.
+### For A/B testing, use the `filtervar` and `filtervarneg` parameters.
 
-Here we see BOTH \[default for tblout parameter\] the top 3 and worst 3 Age / Gender groups in a comparison between where "6txt" did and did not appear in the ad set name.
+Here we see BOTH \[default for tblout parameter\] the top 3 and worst 3 Age / Gender groups in a comparison between where "6txt" did (parameter `filtervar` = "hotreg") and did not (parameter `filtervarneg` = "hotreg") appear in the ad set name.
 At least two events (clicks) must have occurred. Otherwise an anomalous single event for 25-34 males causes that group to appear.
 "Hotreg" indicated where selected regions with a history of performing well were the only ones targeted with the advertisement.
 
