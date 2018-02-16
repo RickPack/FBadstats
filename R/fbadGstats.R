@@ -9,7 +9,7 @@
 #'     the data as a whole.
 #' @param filerd Filename to read. Must be a CSV file.
 #' @param choosedir [Windows-Only] If 'YES', prompts the user for a directory /
-#'     folder in which all CSV files will be processed by fbadGstats.
+#'     folder in which all CSV files will be processed by FBadGstats.
 #' @param sumvar Variable of focus for analysis. Can provide just a few letters
 #'     as long as they do not match another column in the data. For example,
 #'     could use 'REG' for 'Website Registrations Completed' (case-insensitive).
@@ -23,7 +23,7 @@
 #'     in order to appear in the output.
 #' @param minevent Minimum number of 'events' (e.g., Link Clicks) that must
 #'     have occurred in order for a breakdown group to appear in the output.
-#' @param prtrow Number of breakdown groups that will appear in the output,
+#' @param printrow Number of breakdown groups that will appear in the output,
 #'     both the best and worst will appear separately. Default = 20.
 #' @param tblout Show the best, worst, or both in the output? Valid values
 #'    are: BEST , WORST , BOTH
@@ -41,18 +41,18 @@
 #' # to present a window in which one navigates to the desired CSV file,
 #' # outputs LINK CLICKS summary
 #' # (Performance and Clicks view suggested in Facebook Ads Manager)
-#' fbadGstats()
+#' FBadGstats()
 #' # similar but one selects a folder and all of the CSV files are processed,
 #' # and the summarized performance measure is WEBSITE.LEADS.
-#' fbadGstats(choosedir = "YES", sumvar = "WEBSITE.LEADS")
+#' FBadGstats(choosedir = "YES", sumvar = "WEBSITE.LEADS")
 #' # examine the best and worst performing Direct Marketing Areas (DMA) with
 #' # respect to the results column containing 'REG' (case-insenstive,
 #' # so this exampled matched 'Website.Registrations.Completed')
-#' fbadGstats(filerd='example_DMA.csv', sumvar='REG')
+#' FBadGstats(filerd='example_DMA.csv', sumvar='REG')
 #' # see more examples with:
 #' vignette(package = "FBadstats")
-#' fbadGstats('example_DMA.csv', sumvar = "CLICKS", filtervar = 'Book',
-#'             spentlim = 10, minevent = 2, prtrow = 3, tblout = "WORST",
+#' FBadGstats('example_DMA.csv', sumvar = "CLICKS", filtervar = 'Book',
+#'             spentlim = 10, minevent = 2, printrow = 3, tblout = "WORST",
 #'             graphout = "NO", ctrstats = "NO")
 #' }
 #' @importFrom stringr str_c str_to_upper str_subset str_trim
@@ -60,9 +60,9 @@
 #' @importFrom dplyr summarize mutate_if funs distinct arrange min_rank
 #' @importFrom dplyr left_join inner_join mutate slice trunc_mat tbl_df
 #' @export
-fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
+FBadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
                        filtervar = "", filtervarneg = "", spentlim = 0,
-                       minevent = 0, prtrow = 20, tblout = "BOTH",
+                       minevent = 0, printrow = 20, tblout = "BOTH",
                        grphout = "YES", ctrstats = "NO") {
     # Reminder to clean-up code regularly with:
     # formatR::tidy_dir('R')
@@ -92,8 +92,6 @@ fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
 
     for (ff in 1:length(allfls)) {
        filein <- allfls[ff]
-       # capture only the filename for printing in graph caption
-       file_nam <- basename(filein)
 
        if (filein %in% c("example_PerfClk_AgeGender.csv", "example_DMA.csv")) {
            a_file_path <- system.file("extdata", filein, package = "FBadstats")
@@ -125,16 +123,22 @@ fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
         }
 
         if (filein == "") {
-            filein <- choose.files(caption = "Select a .CSV file
+            filein <- choose.files(caption = "Select a single .CSV file
                                    exported from Facebook Ads Manager.")
+            if (length(filein) > 1){
+              stop("Error: More than one file appears to have been selected.")
+            }
         }
+        # capture only the filename for printing in graph caption
+        #  and summary tables
+        file_nam <- basename(filein)
 
 
 # file format check ------------------------
         if (example == 1) {
-            dmafb <- data.frame(read.csv(a_file_path))
+            fb_frm <- data.frame(read.csv(a_file_path))
         } else if (length(grep(".csv", filein))) {
-            dmafb <- data.frame(read.csv(filein))
+            fb_frm <- data.frame(read.csv(filein))
         } else if (length(grep(".xls", filein))) {
             stop(".XLS file not yet supported. Please choose 'Save as .csv'
                  in the Export menu of Facebook Ads Manager.")
@@ -143,105 +147,105 @@ fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
                  exported file from Facebook Ads Manager.")
         }
 # Data munging -----------------------------
-        dnams <- toupper(colnames(dmafb))
-        colnames(dmafb) <- dnams
+        fb_frm_nams <- toupper(colnames(fb_frm))
+        colnames(fb_frm) <- fb_frm_nams
         # Amount spent Today interferes with using select to find
-        # 'Amount Spent' total invisible(dmafb)
-        if (length(grep("TODAY", dnams)) > 0) {
-            dmafb <- dmafb %>% select(-contains("TODAY"))
+        # 'Amount Spent' total invisible(fb_frm)
+        if (length(grep("TODAY", fb_frm_nams)) > 0) {
+            fb_frm <- fb_frm %>% select(-contains("TODAY"))
             # reset column names
-            dnams <- colnames(dmafb)
+            fb_frm_nams <- colnames(fb_frm)
         }
         # Cost columns interfere with identification of summary columns
         # for which we want counts of 'events'
-        if (length(grep("COST", dnams)) > 0) {
-            dmafb <- dmafb %>% select(-contains("COST"))
+        if (length(grep("COST", fb_frm_nams)) > 0) {
+            fb_frm <- fb_frm %>% select(-contains("COST"))
             # reset column names
-            dnams <- colnames(dmafb)
+            fb_frm_nams <- colnames(fb_frm)
         }
         # replace missing value (NA) with 0
-        dmafb[is.na(dmafb)] <- 0
-        dmafb <- as_tibble(dmafb)
+        fb_frm[is.na(fb_frm)] <- 0
+        fb_frm <- as_tibble(fb_frm)
         # Identify whether Ad Set , Campaign, or Ad Name appears in file
-        if (length(dnams[grepl("AD.SET", toupper(dnams))]) > 0) {
-            adcomp <- as.character(dmafb %>%
-                      pull(grep("AD.SET", stringr::str_to_upper(dnams))))
-        } else if (length(dnams[grepl("CAMPAIGN", toupper(dnams))]) > 0) {
-            adcomp <- as.character(dmafb %>%
-                      pull(grep("CAMPAIGN", stringr::str_to_upper(dnams))))
-        } else if (length(dnams[grepl("AD.NAME", toupper(dnams))]) > 0) {
-            adcomp <- as.character(dmafb %>%
-                      pull(grep("AD.NAME", stringr::str_to_upper(dnams))))
+        if (length(fb_frm_nams[grepl("AD.SET.NAME", toupper(fb_frm_nams))]) > 0) {
+            adcomp <- as.character(fb_frm %>%
+                      pull(grep("AD.SET.NAME", stringr::str_to_upper(fb_frm_nams))))
+        } else if (length(fb_frm_nams[grepl("CAMPAIGN.NAME", toupper(fb_frm_nams))]) > 0) {
+            adcomp <- as.character(fb_frm %>%
+                      pull(grep("CAMPAIGN.NAME", stringr::str_to_upper(fb_frm_nams))))
+        } else if (length(fb_frm_nams[grepl("AD.NAME", toupper(fb_frm_nams))]) > 0) {
+            adcomp <- as.character(fb_frm %>%
+                      pull(grep("AD.NAME", stringr::str_to_upper(fb_frm_nams))))
         } else stop("File not valid. Have you modified the exported file?")
 
-        dmafb$CAMPAIGN.NAME <- adcomp
+        fb_frm$CAMPAIGN.NAME <- adcomp
         # eliminate total row that appears if selected in Ads Manager
         # then apply filtervar if specified
-        dmafb <- dmafb %>%
+        fb_frm <- fb_frm %>%
                  filter(!is.na(CAMPAIGN.NAME) &
                          str_trim(CAMPAIGN.NAME) != "") %>%
                  filter(grepl(filtervar, toupper(CAMPAIGN.NAME)))
         if (filtervarneg != ""){
-          dmafb <- dmafb %>%
+          fb_frm <- fb_frm %>%
                  filter(!(grepl(filtervarneg, toupper(CAMPAIGN.NAME))))
         }
-        dnams <- colnames(dmafb)
-        dnams2 <- toupper(colnames(dmafb))
+        fb_frm_nams <- colnames(fb_frm)
+        fb_frm_nams2 <- toupper(colnames(fb_frm))
         # Recognize when multiple breakdown variables selected and combine them
-        if (dnams2[5] == "GENDER") {
-            dmafb <- dmafb %>% mutate(AGE_GENDER = str_c(AGE, ":", GENDER))
-            dmafb <- dmafb %>% select(dnams[1:3],
-                                      AGE_GENDER, dnams[6:length(dnams)])
+        if (fb_frm_nams2[5] == "GENDER") {
+            fb_frm <- fb_frm %>% mutate(AGE_GENDER = str_c(AGE, ":", GENDER))
+            fb_frm <- fb_frm %>% select(fb_frm_nams[1:3],
+                                      AGE_GENDER, fb_frm_nams[6:length(fb_frm_nams)])
         }
-        if (dnams2[5] == "IMPRESSION.DEVICE") {
-            dmafb <- dmafb %>% mutate(PLATFORM_DEVICE =
+        if (fb_frm_nams2[5] == "IMPRESSION.DEVICE") {
+            fb_frm <- fb_frm %>% mutate(PLATFORM_DEVICE =
                                       str_c(PLATFORM, ":", IMPRESSION.DEVICE))
-            dmafb <- dmafb %>% select(dnams[1:3], PLATFORM_DEVICE,
-                                      dnams[6:length(dnams)])
+            fb_frm <- fb_frm %>% select(fb_frm_nams[1:3], PLATFORM_DEVICE,
+                                      fb_frm_nams[6:length(fb_frm_nams)])
         }
         # This is expected to be DMA.Region or another
         # grouping variable like Age
-        dmafb$bygrpvar <- dmafb %>% pull(4)
+        fb_frm$bygrpvar <- fb_frm %>% pull(4)
 
-        dmafb$S1 <- dmafb %>% select(contains("SPENT")) %>% pull(1)
-        dnams <- colnames(dmafb)
-        dnams2 <- toupper(colnames(dmafb))
-        colnames(dmafb) <- dnams2
+        fb_frm$S1 <- fb_frm %>% select(contains("SPENT")) %>% pull(1)
+        fb_frm_nams <- colnames(fb_frm)
+        fb_frm_nams2 <- toupper(colnames(fb_frm))
+        colnames(fb_frm) <- fb_frm_nams2
 
-        dnams3 <- dnams2[!grepl("REGION", dnams2)]
+        fb_frm_nams3 <- fb_frm_nams2[!grepl("REGION", fb_frm_nams2)]
 # Input file checks ------------------------
-        if (sumvar != "" & length(grep(sumvar, dnams3)) > 1) {
+        if (sumvar != "" & length(grep(sumvar, fb_frm_nams3)) > 1) {
             errvar = str_c("For ", file_nam, ": Too many matching summarizing
                             variables found in exported data. Pick one. Here
                             are the first (and possibly only) two matches -
                             please specify enough characters for
                             sumvar parameter to match only one:  ",
-                            dnams3[grep(sumvar, dnams3)[1]], " and ",
-                            dnams3[grep(sumvar, dnams3)[2]])
+                            fb_frm_nams3[grep(sumvar, fb_frm_nams3)[1]], " and ",
+                            fb_frm_nams3[grep(sumvar, fb_frm_nams3)[2]])
             stop(errvar)
-        } else if (length(grep(sumvar, dnams3)) == 0 & sumvar != "") {
+        } else if (length(grep(sumvar, fb_frm_nams3)) == 0 & sumvar != "") {
             # need to stop recycling
             errvar <- str_c("For ", file_nam, ": sumvar parameter provided
                              but no matching summarizing variables found in
                              exported data. Provided sumvar was: ", sumvar, ".
                              Available columns in data are the following
                              (not all may be summarizable): ",
-                             dnams3)
+                             fb_frm_nams3)
             stop(errvar)
 # Summarized variable ----------------------
-        } else if (length(grep(sumvar, dnams3)) == 1 & sumvar != "") {
-            sumvar_frm <- dnams3[grep(sumvar, dnams3)]
-            dmafb$V1 <- dmafb %>% select(dnams3[grep(sumvar, dnams3)]) %>%
+        } else if (length(grep(sumvar, fb_frm_nams3)) == 1 & sumvar != "") {
+            sumvar_frm <- fb_frm_nams3[grep(sumvar, fb_frm_nams3)]
+            fb_frm$V1 <- fb_frm %>% select(fb_frm_nams3[grep(sumvar, fb_frm_nams3)]) %>%
               pull(1)
-            sumprtvar <- gsub("^[:alnum:]", "", sumvar_frm)
-            sumprtvar <- gsub("[.]", " ", sumprtvar)
-        } else if (length(grep("RESULTS", dnams3)) == 1) {
-            dmafb$V1 <- dmafb$RESULTS
-            sumprtvar <- "RESULTS"
+            sumprintvar <- gsub("^[:alnum:]", "", sumvar_frm)
+            sumprintvar <- gsub("[.]", " ", sumprintvar)
+        } else if (length(grep("RESULTS", fb_frm_nams3)) == 1) {
+            fb_frm$V1 <- fb_frm$RESULTS
+            sumprintvar <- "RESULTS"
             sumvar <- "RESULTS"
-        } else if (length(grep("LINK.CLICKS", dnams3)) == 1) {
-            dmafb$V1 <- dmafb$LINK.CLICKS
-            sumprtvar <- "LINK CLICKS"
+        } else if (length(grep("LINK.CLICKS", fb_frm_nams3)) == 1) {
+            fb_frm$V1 <- fb_frm$LINK.CLICKS
+            sumprintvar <- "LINK CLICKS"
             sumvar <- "LINK.CLICKS"
         } else {
             errvar <- str_c("For ", file_nam, ": Summarizing variable not found:
@@ -252,9 +256,9 @@ fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
             stop(errvar)
         }
 # Last file check --------------------------
-        if (sum(dmafb$V1, na.rm = TRUE) == 0) {
+        if (sum(fb_frm$V1, na.rm = TRUE) == 0) {
             errvar <- str_c("For ", file_nam, ": There appears to be
-                            no ", sumprtvar, " reported.
+                            no ", sumprintvar, " reported.
                             No output will be generated.
                             Might you have specified a value for the filtervar
                             or filtervarneg parameter that caused no data
@@ -263,21 +267,21 @@ fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
         }
 
         # replace NAs with 0 replace INFs with 0
-        dmafb <- dmafb %>% mutate_if(is.numeric,
+        fb_frm <- fb_frm %>% mutate_if(is.numeric,
                                      (funs(replace(., is.na(.), 0))))
-        dmafb <- dmafb %>% mutate_if(is.numeric,
+        fb_frm <- fb_frm %>% mutate_if(is.numeric,
                                      (funs(replace(., is.infinite(.), 0))))
 # ctrstats section -------------------------
-        if (ctrstats %in% c("YES", 1) & length(grep("RATE", dnams3)) >= 1) {
-            if (length(grep("CTR..LINK.CLICK.THROUGH.RATE.", dnams3)) == 1) {
+        if (ctrstats %in% c("YES", 1) & length(grep("RATE", fb_frm_nams3)) >= 1) {
+            if (length(grep("CTR..LINK.CLICK.THROUGH.RATE.", fb_frm_nams3)) == 1) {
                 noctr <- 0
-                dmafb$C1 <- as.numeric(dmafb$CTR..LINK.CLICK.THROUGH.RATE.)
+                fb_frm$C1 <- as.numeric(fb_frm$CTR..LINK.CLICK.THROUGH.RATE.)
                 ctrnam <- "CTR..LINK.CLICK.THROUGH.RATE."
-            } else if (length(grep("RATE", dnams3)) == 1) {
+            } else if (length(grep("RATE", fb_frm_nams3)) == 1) {
                 noctr <- 0
-                dmafb$C1 <- dmafb %>% select(dnams3[grep("RATE", dnams3)]) %>%
+                fb_frm$C1 <- fb_frm %>% select(fb_frm_nams3[grep("RATE", fb_frm_nams3)]) %>%
                   pull(1)
-                ctrnam <- dnams3[grep("RATE", dnams3)]
+                ctrnam <- fb_frm_nams3[grep("RATE", fb_frm_nams3)]
             } else {
                 noctr <- 1
             }
@@ -289,28 +293,28 @@ fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
             grpvar <- quo(!!newvar)
             return(grpvar)
         }
-        # The 4th column in the dnams2 vector varies depending on
+        # The 4th column in the fb_frm_nams2 vector varies depending on
         # the file used by the user (e.g., Age)
-        grpvar <- grpfunc(newvar = as.name(dnams[4]))
+        grpvar <- grpfunc(newvar = as.name(fb_frm_nams[4]))
 
-        sumnam <- dnams3[grep(sumvar, dnams3)]
-        dmafbgrp <- dmafb %>% group_by(!!grpvar)
-        CTRvar <- grep("CTR..ALL.", toupper(dnams2))
+        sumnam <- fb_frm_nams3[grep(sumvar, fb_frm_nams3)]
+        fb_frm_grp <- fb_frm %>% group_by(!!grpvar)
+        CTRvar <- grep("CTR..ALL.", toupper(fb_frm_nams2))
         # print ctr data only if requested via parameter
         if (noctr != 1) {
-            dmasum <- summarize(dmafbgrp, sumspent = sum(as.numeric(S1)),
+            summary_frm <- summarize(fb_frm_grp, sumspent = sum(as.numeric(S1)),
                                 avgctr = mean(as.numeric(C1)),
-                                sumevt = sum(as.numeric(V1)))
+                                sumevent = sum(as.numeric(V1)))
         } else {
-            dmasum <- summarize(dmafbgrp, sumspent = sum(as.numeric(S1)),
-                                sumevt = sum(as.numeric(V1)))
+            summary_frm <- summarize(fb_frm_grp, sumspent = sum(as.numeric(S1)),
+                                sumevent = sum(as.numeric(V1)))
         }
         # cost per event - a critical metric
-        dmasum$costevt <- round(dmasum$sumspent/dmasum$sumevt, 1)
+        summary_frm$costevent <- round(summary_frm$sumspent/summary_frm$sumevent, 2)
         # apply spentlim and minevent parameters
-        dmasum2 <- filter(dmasum, sumspent >= spentlim & sumevt > minevent)
+        summary_frm2 <- filter(summary_frm, sumspent >= spentlim & sumevent > minevent)
         # if no data then terminate
-        if(nrow(dmasum2)==0){
+        if(nrow(summary_frm2)==0){
           errvar <- str_c("For ", file_nam, ": No data found.
                           No output will be generated.
                           Might you have specified a value for
@@ -318,85 +322,85 @@ fbadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
                           that caused no data to be selected?")
           stop(errvar)
         }
-        dmastat_evt <- dmasum2 %>% arrange(costevt, desc(sumspent)) %>%
-                       mutate(rnkevt = min_rank(costevt)) %>%
-                       select(!!grpvar, rnkevt, sumevt, costevt, sumspent)
-        dmastat_all <- as_tibble(dmasum2 %>% distinct(!!grpvar), validate = FALSE)
+        summary_frm_event_rnk <- summary_frm2 %>% arrange(costevent, desc(sumspent)) %>%
+                       mutate(rnkevent = min_rank(costevent)) %>%
+                       select(!!grpvar, rnkevent, sumevent, costevent, sumspent)
+        summary_frm_distinct_grp <- as_tibble(summary_frm2 %>% distinct(!!grpvar), validate = FALSE)
 
         if (noctr != 1) {
-            dmastat_ctravg <- dmasum2 %>%
+            summary_frm_ctravg <- summary_frm2 %>%
                                arrange(desc(avgctr), desc(sumspent)) %>%
                                mutate(rnkctravg = min_rank(avgctr)) %>%
                                select(!!grpvar, sumspent, rnkctravg, avgctr)
-            frms <- list(dmastat_ctravg, dmastat_evt)
+            frms <- list(summary_frm_ctravg, summary_frm_event_rnk)
 
             for (i in 1:length(frms)) {
                 # indexing list did not appear to work in join
                 if (i == 1) {
-                  tmpfrm <- dmastat_ctravg
+                  tmpfrm <- summary_frm_ctravg
                 }
                 if (i == 2) {
-                  tmpfrm <- dmastat_evt
+                  tmpfrm <- summary_frm_event_rnk
                 }
-                dmastat_all <- left_join(dmastat_all, tmpfrm, by = dnams[4])
+                summary_frm_distinct_grp <- left_join(summary_frm_distinct_grp, tmpfrm, by = fb_frm_nams[4])
             }
         } else {
-            dmastat_all <- left_join(dmastat_all, dmastat_evt, by = dnams[4])
+            summary_frm_distinct_grp <- left_join(summary_frm_distinct_grp, summary_frm_event_rnk, by = fb_frm_nams[4])
         }
-        dmastat_all[is.na(dmastat_all)] <- 999
-        prtrow <- min(prtrow, nrow(dmastat_all))
+        summary_frm_distinct_grp[is.na(summary_frm_distinct_grp)] <- 999
+        printrow <- min(printrow, nrow(summary_frm_distinct_grp))
         # Keep so line-break between each processed file when multiple files selected
         print("-------------------------------------------------------------")
 
         if (noctr != 1) {
             if (tblout %in% c("WORST", "BOTH")) {
-                sumctravg <- arrange(dmastat_all, rnkctravg)
+                sumctravg <- arrange(summary_frm_distinct_grp, rnkctravg)
                 print(str_c("WORST: ", ctrnam, " in ", file_nam))
-                print(data.frame(sumctravg[1:prtrow, ]))
+                print(data.frame(sumctravg[1:printrow, ]))
             }
             if (tblout %in% c("BEST", "BOTH")) {
-                sumctravg <- arrange(dmastat_all, desc(rnkctravg))
+                sumctravg <- arrange(summary_frm_distinct_grp, desc(rnkctravg))
                 print(str_c("BEST: ", ctrnam, " in ", file_nam))
-                print(data.frame(sumctravg[1:prtrow, ]))
+                print(data.frame(sumctravg[1:printrow, ]))
             }
         }
         if (tblout %in% c("WORST", "BOTH")) {
-            sumevtavg <- arrange(dmastat_all, desc(rnkevt))
-            print(str_c("WORST: ", sumprtvar, " in ", file_nam))
-            print(data.frame(sumevtavg[1:prtrow, ]))
+            sumeventavg <- arrange(summary_frm_distinct_grp, desc(rnkevent))
+            print(str_c("WORST: ", sumprintvar, " in ", file_nam))
+            print(data.frame(sumeventavg[1:printrow, ]))
         }
         if (tblout %in% c("BEST", "BOTH")) {
-            sumevtavg <- arrange(dmastat_all, rnkevt)
-            print(str_c("BEST: ", sumprtvar, " in ", file_nam))
-            print(data.frame(sumevtavg[1:prtrow, ]))
+            sumeventavg <- arrange(summary_frm_distinct_grp, rnkevent)
+            print(str_c("BEST: ", sumprintvar, " in ", file_nam))
+            print(data.frame(sumeventavg[1:printrow, ]))
         }
-        grpvarprt <- gsub("[.]", " ", as.character(grpvar[2]))
+        grpvarprint <- gsub("[.]", " ", as.character(grpvar[2]))
         print(paste("Number of groups in all of data: ",
-                    length(unique(dmasum %>% pull(!!grpvar))), sep = ""))
+                    length(unique(summary_frm %>% pull(!!grpvar))), sep = ""))
         if (exists("sumnam")) {
-            print(paste("Number of ", grpvarprt, " groups with at least one ",
-                        sumprtvar, " and minimum spend of $", spentlim, " = ",
-                        length(unique(dmasum2 %>% pull(!!grpvar))), sep = ""))
+            print(paste("Number of ", grpvarprint, " groups with at least one ",
+                        sumprintvar, " and minimum spend of $", spentlim, " = ",
+                        length(unique(summary_frm2 %>% pull(!!grpvar))), sep = ""))
         } else {
-            print(paste("Number of ", grpvarprt,
-                        " groups with minimum spend of $", sumprtvar, " = ",
-                        length(unique(dmasum2 %>% pull(!!grpvar))), sep = ""))
+            print(paste("Number of ", grpvarprint,
+                        " groups with minimum spend of $", sumprintvar, " = ",
+                        length(unique(summary_frm2 %>% pull(!!grpvar))), sep = ""))
         }
-        print(paste("Total amount spent: $", sum(dmasum$sumspent), sep = ""))
+        print(paste("Total amount spent: $", sum(summary_frm$sumspent), sep = ""))
 
 
 # Graph section ----------------------------
         if (grphoutTF == TRUE) {
-            graphads(dmastat_all, prtrow, grpvar, grpvarprt, sumnam,
-                     todaydt, file_nam, spentlim, sumprtvar)
+            graphads(summary_frm_distinct_grp, printrow, grpvar, grpvarprint, sumnam,
+                     todaydt, file_nam, spentlim, sumprintvar)
         }
     }
     # restore stringsAsFactors option to original value
     options(stringsAsFactors=origoptFact)
-    # invisibly return dmafbgrp for use outside of the function
-    invisible(dmafbgrp)
+    # invisibly return fb_frm_grp for use outside of the function
+    invisible(fb_frm_grp)
 }
 .onAttach <- function(libname, pkgname) {
-    packageStartupMessage(paste0("FB Ads Analysis tool: 'fbadGstats' ",
+    packageStartupMessage(paste0("FB Ads Analysis tool: 'FBadGstats' ",
                                  "- Breakdown Group analysis function"))
 }

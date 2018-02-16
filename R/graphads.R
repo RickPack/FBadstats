@@ -1,14 +1,14 @@
 #' Generates ggplot histogram and add'l statistics for fbadGstats
 #' @description More text coming.
-#' @param dmastat_all post-processed data frame from fbadGstats
-#' @param prtrow text
+#' @param summary_frm_distinct_grp post-processed data frame from fbadGstats
+#' @param printrow text
 #' @param grpvar text
-#' @param grpvarprt text
+#' @param grpvarprint text
 #' @param sumnam text
 #' @param todaydt text
 #' @param file_nam text
 #' @param spentlim text
-#' @param sumprtvar text
+#' @param sumprintvar text
 #'
 #' @return A graph with a complementary table for the best performers
 #' @importFrom ggplot2 ggplot aes scale_x_discrete scale_y_continuous geom_col
@@ -19,18 +19,19 @@
 #' @importFrom dplyr summarize mutate_if funs distinct arrange min_rank
 #' @importFrom dplyr left_join inner_join mutate slice trunc_mat tbl_df
 #' @export
-graphads <- function(dmastat_all, prtrow, grpvar, grpvarprt, sumnam, todaydt, file_nam,
-                     spentlim, sumprtvar){
-  # Capture the best breakdown groups in sumevtavg
-  sumevtavg <- arrange(dmastat_all, rnkevt)
-  statset <- sumevtavg %>% slice(1:min(prtrow, 8)) %>% filter(sumevt > 0)
-  sumevtavg_gt0 <- sumevtavg %>% filter(sumevt > 0)
-  medtop <- round(median(statset$costevt), 1)
-  medall <- round(median(sumevtavg_gt0$costevt), 1)
+graphads <- function(summary_frm_distinct_grp, printrow, grpvar, grpvarprint, sumnam, todaydt, file_nam,
+                     spentlim, sumprintvar)
+  {
+  # Capture the best breakdown groups in sumeventavg
+  sumeventavg <- arrange(summary_frm_distinct_grp, rnkevent)
+  statset <- sumeventavg %>% slice(1:min(printrow, 8)) %>% filter(sumevent > 0)
+  sumeventavg_gt0 <- sumeventavg %>% filter(sumevent > 0)
+  medtop <- round(median(statset$costevent), 2)
+  medall <- round(median(sumeventavg_gt0$costevent), 2)
   medspent <- round(median(statset$sumspent))
   plotforms <- ggplot(statset) +
     aes(x = (statset %>% pull(!!grpvar)),
-        y = costevt, size = 06,
+        y = costevent, size = 06,
         fill = (statset %>% pull(!!grpvar))) +
     scale_x_discrete(limits = statset %>%
                        pull(!!grpvar)) +
@@ -46,17 +47,17 @@ graphads <- function(dmastat_all, prtrow, grpvar, grpvarprt, sumnam, todaydt, fi
     theme(plot.title = element_text(hjust = 0.5),
           legend.position="none",
           text = element_text(size = 08)) +
-    xlab(str_c("Best performing (lowest cost) ", grpvarprt)) +
+    xlab(str_c("Best performing (lowest cost) ", grpvarprint)) +
     ylab(str_c("Cost per ", sumnam)) +
-    geom_text(aes(label = paste0("$",costevt,"; Spent = $",
+    geom_text(aes(label = paste0("$",costevent,"; Spent = $",
                                  sumspent)), vjust = 0, size = 03)
   plotformsG <- ggplotGrob(plotforms)
   extrainfo <- paste("Median cost (all) only considers where there was at least one ", sumnam, sep = "")
   stat_tbl <- data.frame(medtop, medall, medspent,
                          spentlim, extrainfo)
-  colnames(stat_tbl) <- c(str_c("Median cost\nper '", sumprtvar,
+  colnames(stat_tbl) <- c(str_c("Median cost\nper '", sumprintvar,
                                 "' for\n(graphed best performers)"),
-                          str_c("Median cost\nper '", sumprtvar,
+                          str_c("Median cost\nper '", sumprintvar,
                                 "' for\n(all)"),
                           "Median amount spent\namong\n(graphed best performers)",
                           "Minimum $ spent\nto appear?\n(spentlim parameter)", "INFO:")

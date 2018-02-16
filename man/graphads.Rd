@@ -4,17 +4,17 @@
 \alias{graphads}
 \title{Generates ggplot histogram and add'l statistics for fbadGstats}
 \usage{
-graphads(dmastat_all, prtrow, grpvar, grpvarprt, sumnam, todaydt, file_nam,
-  spentlim, sumprtvar)
+graphads(summary_frm_distinct_grp, printrow, grpvar, grpvarprint, sumnam,
+  todaydt, file_nam, spentlim, sumprintvar)
 }
 \arguments{
-\item{dmastat_all}{post-processed data frame from fbadGstats}
+\item{summary_frm_distinct_grp}{post-processed data frame from fbadGstats}
 
-\item{prtrow}{text}
+\item{printrow}{text}
 
 \item{grpvar}{text}
 
-\item{grpvarprt}{text}
+\item{grpvarprint}{text}
 
 \item{sumnam}{text}
 
@@ -24,7 +24,7 @@ graphads(dmastat_all, prtrow, grpvar, grpvarprt, sumnam, todaydt, file_nam,
 
 \item{spentlim}{text}
 
-\item{sumprtvar}{text}
+\item{sumprintvar}{text}
 }
 \value{
 A graph with a complementary table for the best performers
