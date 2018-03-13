@@ -5,7 +5,7 @@
 \title{Generates ggplot histogram and add'l statistics for fbadGstats}
 \usage{
 graphads(summary_frm_distinct_grp, printrow, grpvar, grpvarprint, sumnam,
-  todaydt, file_nam, spentlim, sumprintvar)
+  todaydt, file_nam, spentlim, sumprintvar, sum_set)
 }
 \arguments{
 \item{summary_frm_distinct_grp}{post-processed data frame from fbadGstats}
@@ -25,6 +25,8 @@ graphads(summary_frm_distinct_grp, printrow, grpvar, grpvarprint, sumnam,
 \item{spentlim}{text}
 
 \item{sumprintvar}{text}
+
+\item{sum_set}{text}
 }
 \value{
 A graph with a complementary table for the best performers

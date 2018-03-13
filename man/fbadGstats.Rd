@@ -52,8 +52,9 @@ Best or worst performing subgroups depending on `tblout` parameter.
     if grphout parameter is YES.
 }
 \description{
-Reports statistics for breakdown groups (e.g., Age) across
-    ads from Facebook Ads Manager exported data.
+Reports statistics for breakdown groups (e.g., Age) and
+    Campaign / Ad Set / Ad (depending on file's grouping) across
+    advertisements from Facebook Ads Manager exported data.
  Displays the best and worst performing breakdown groups with a ranking
     as well as the sum total of a specified event
     (e.g., 'Website Registrations Completed'). Can also distplay a bar

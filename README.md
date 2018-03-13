@@ -58,6 +58,7 @@ Advanced usage - modifying parameters
 library("FBadstats")
 # Show only the best performing groups and include the graphical output
 FBadGstats(filerd = "example_DMA.csv", grphout = "YES", tblout = "BEST")
+#> Joining, by = "DMA.REGION"
 #> [1] "-------------------------------------------------------------"
 #> [1] "BEST: LINK CLICKS in example_DMA.csv"
 #>                    DMA.REGION rnkevent sumevent costevent sumspent
@@ -84,9 +85,27 @@ FBadGstats(filerd = "example_DMA.csv", grphout = "YES", tblout = "BEST")
 #> [1] "Number of groups in all of data: 135"
 #> [1] "Number of DMA REGION groups with at least one LINK CLICKS and minimum spend of $0 = 63"
 #> [1] "Total amount spent: $320.47"
+#> Joining, by = "AD.SET.NAME"
 ```
 
 <img src="README-example1-1.png" style="display: block; margin: auto;" />
+
+    #> [1] "-------------------------------------------------------------"
+    #> [1] "BEST: LINK CLICKS in example_DMA.csv"
+    #>                      AD.SET.NAME rnkevent sumevent costevent sumspent
+    #> 1 ProBook_xPg_SendLane2544hotreg        1       91      1.30   118.02
+    #> 2  ProBook_AllPg_75kAccSeLaneReg        2       13      1.40    18.26
+    #> 3    ProBook_SendLaneB2544hotreg        3        5      1.42     7.10
+    #> 4      ProBook_Pg_LkDev75k+_5562        4        8      1.60    12.79
+    #> 5      ProBook_Pg_LkDev75k+_3544        5       34      1.69    57.39
+    #> 6     ProBook_Pg_75kAccSeLaneReg        6       45      1.82    81.93
+    #> 7        ProBook_Pg_75kSeLaneReg        7        3      2.12     6.35
+    #> 8  ProBook_xPg_6txt_SendLane2544        8        4      3.76    15.03
+    #> [1] "Number of groups in all of data: 11"
+    #> [1] "Number of AD SET NAME groups with at least one LINK CLICKS and minimum spend of $0 = 8"
+    #> [1] "Total amount spent: $320.47"
+
+<img src="README-example1-2.png" style="display: block; margin: auto;" />
 
 ### For A/B testing, use the `filtervar` and `filtervarneg` parameters.
 
@@ -98,6 +117,7 @@ At least two events (clicks) must have occurred. Otherwise, an anomalous single 
 
 ``` r
 FBadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervar = 'hotreg',    printrow = 3, minevent = 2, grphout = "NO")
+#> Joining, by = "AGE_GENDER"
 #> [1] "-------------------------------------------------------------"
 #> [1] "WORST: RESULTS in example_PerfClk_AgeGender.csv"
 #>     AGE_GENDER rnkevent sumevent costevent sumspent
@@ -112,7 +132,21 @@ FBadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervar = 'hotreg',    pr
 #> [1] "Number of groups in all of data: 6"
 #> [1] "Number of AGE_GENDER groups with at least one RESULTS and minimum spend of $0 = 3"
 #> [1] "Total amount spent: $125.76"
+#> Joining, by = "AD.SET.NAME"
+#> [1] "-------------------------------------------------------------"
+#> [1] "WORST: RESULTS in example_PerfClk_AgeGender.csv"
+#>                      AD.SET.NAME rnkevent sumevent costevent sumspent
+#> 1    ProBook_SendLaneB2544hotreg        2        3      2.37     7.10
+#> 2 ProBook_xPg_SendLane2544hotreg        1       80      1.48   118.02
+#> [1] "BEST: RESULTS in example_PerfClk_AgeGender.csv"
+#>                      AD.SET.NAME rnkevent sumevent costevent sumspent
+#> 1 ProBook_xPg_SendLane2544hotreg        1       80      1.48   118.02
+#> 2    ProBook_SendLaneB2544hotreg        2        3      2.37     7.10
+#> [1] "Number of groups in all of data: 3"
+#> [1] "Number of AD SET NAME groups with at least one RESULTS and minimum spend of $0 = 2"
+#> [1] "Total amount spent: $125.76"
 FBadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervarneg = 'hotreg', printrow = 3, minevent = 2,   grphout = "NO")
+#> Joining, by = "AGE_GENDER"
 #> [1] "-------------------------------------------------------------"
 #> [1] "WORST: RESULTS in example_PerfClk_AgeGender.csv"
 #>     AGE_GENDER rnkevent sumevent costevent sumspent
@@ -127,46 +161,97 @@ FBadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervarneg = 'hotreg', pr
 #> [1] "Number of groups in all of data: 14"
 #> [1] "Number of AGE_GENDER groups with at least one RESULTS and minimum spend of $0 = 5"
 #> [1] "Total amount spent: $258.62"
+#> Joining, by = "AD.SET.NAME"
+#> [1] "-------------------------------------------------------------"
+#> [1] "WORST: RESULTS in example_PerfClk_AgeGender.csv"
+#>                     AD.SET.NAME rnkevent sumevent costevent sumspent
+#> 1     ProBook_Pg_LkDev75k+_5562        7        6      2.13    12.79
+#> 2     ProBook_Pg_LkDev75k+_3544        6       28      2.05    57.39
+#> 3 ProBook_AllPg_75kAccSeLaneReg        5       11      1.67    18.37
+#> [1] "BEST: RESULTS in example_PerfClk_AgeGender.csv"
+#>                     AD.SET.NAME rnkevent sumevent costevent sumspent
+#> 1     ProBook_Pg_LeadSendLkUKSA        1       71      0.61    42.99
+#> 2  ProBook_Pg_50kLeadSendLkUKSA        2       17      1.22    20.81
+#> 3 ProBook_xPg_6txt_SendLane2544        3       11      1.37    15.03
+#> [1] "Number of groups in all of data: 10"
+#> [1] "Number of AD SET NAME groups with at least one RESULTS and minimum spend of $0 = 7"
+#> [1] "Total amount spent: $258.62"
 ```
 
 ### Advanced Example 3/3 (Assign FBadGstats call to a variable in order to explore the data outside of FBadGstats)
 
+##### A list is returned so use \[\[1\]\] for breakdown groups and \[\[2\]\] for Campaign, Ad, or Ad Set, one of which being automatically detected based on the inputfile
+
 ``` r
-myfbfrm <- FBadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervar = 'AllPg', grphout = "NO")
+myfbfrm <- FBadGstats(filerd = "Example_AdsView_Region.csv", filtervar = 'Teach', grphout = "NO")
+#> Joining, by = "IMPRESSION.DEVICE"
 #> [1] "-------------------------------------------------------------"
-#> [1] "WORST: RESULTS in example_PerfClk_AgeGender.csv"
-#>     AGE_GENDER rnkevent sumevent costevent sumspent
-#> 1 25-34:female        4        1      3.69     3.69
-#> 2 55-64:female        3        1      1.75     1.75
-#> 3 35-44:female        2        5      1.40     7.01
-#> 4 45-54:female        1        4      1.33     5.31
-#> [1] "BEST: RESULTS in example_PerfClk_AgeGender.csv"
-#>     AGE_GENDER rnkevent sumevent costevent sumspent
-#> 1 45-54:female        1        4      1.33     5.31
-#> 2 35-44:female        2        5      1.40     7.01
-#> 3 55-64:female        3        1      1.75     1.75
-#> 4 25-34:female        4        1      3.69     3.69
-#> [1] "Number of groups in all of data: 5"
-#> [1] "Number of AGE_GENDER groups with at least one RESULTS and minimum spend of $0 = 4"
-#> [1] "Total amount spent: $18.37"
+#> [1] "WORST: RESULTS in Example_AdsView_Region.csv"
+#>    IMPRESSION.DEVICE rnkevent sumevent costevent sumspent
+#> 1 Android Smartphone        3       14      0.64     9.00
+#> 2             iPhone        2       11      0.51     5.61
+#> 3     Android Tablet        1        1      0.09     0.09
+#> [1] "BEST: RESULTS in Example_AdsView_Region.csv"
+#>    IMPRESSION.DEVICE rnkevent sumevent costevent sumspent
+#> 1     Android Tablet        1        1      0.09     0.09
+#> 2             iPhone        2       11      0.51     5.61
+#> 3 Android Smartphone        3       14      0.64     9.00
+#> [1] "Number of groups in all of data: 7"
+#> [1] "Number of IMPRESSION DEVICE groups with at least one RESULTS and minimum spend of $0 = 3"
+#> [1] "Total amount spent: $15.23"
+#> Joining, by = "AD.NAME"
+#> [1] "-------------------------------------------------------------"
+#> [1] "WORST: RESULTS in Example_AdsView_Region.csv"
+#>                   AD.NAME rnkevent sumevent costevent sumspent
+#> 1          ProBook1_Teach        2       16      0.85    13.59
+#> 2 Div_Pwr_Teach100k+_AllD        1       10      0.16     1.64
+#> [1] "BEST: RESULTS in Example_AdsView_Region.csv"
+#>                   AD.NAME rnkevent sumevent costevent sumspent
+#> 1 Div_Pwr_Teach100k+_AllD        1       10      0.16     1.64
+#> 2          ProBook1_Teach        2       16      0.85    13.59
+#> [1] "Number of groups in all of data: 2"
+#> [1] "Number of AD NAME groups with at least one RESULTS and minimum spend of $0 = 2"
+#> [1] "Total amount spent: $15.23"
 ## What are all of the available ad set names?
 # 1. First look at the column names in the data
 colnames(myfbfrm)
-#>  [1] "REPORTING.STARTS"              "REPORTING.ENDS"               
-#>  [3] "AD.SET.NAME"                   "AGE_GENDER"                   
-#>  [5] "DELIVERY"                      "RESULTS"                      
-#>  [7] "RESULT.INDICATOR"              "REACH"                        
-#>  [9] "FREQUENCY"                     "BUDGET"                       
-#> [11] "BUDGET.TYPE"                   "AMOUNT.SPENT..USD."           
-#> [13] "ENDS"                          "STARTS"                       
-#> [15] "CLICKS..ALL."                  "CTR..ALL."                    
-#> [17] "CPC..ALL...USD."               "IMPRESSIONS"                  
-#> [19] "LINK.CLICKS"                   "CTR..LINK.CLICK.THROUGH.RATE."
-#> [21] "CAMPAIGN.NAME"                 "BYGRPVAR"                     
-#> [23] "S1"                            "V1"
+#>  [1] "REPORTING.STARTS"                            
+#>  [2] "REPORTING.ENDS"                              
+#>  [3] "AD.NAME"                                     
+#>  [4] "IMPRESSION.DEVICE"                           
+#>  [5] "DELIVERY"                                    
+#>  [6] "AMOUNT.SPENT..USD."                          
+#>  [7] "UNIQUE.CTR..LINK.CLICK.THROUGH.RATE."        
+#>  [8] "RELEVANCE.SCORE"                             
+#>  [9] "CTR..ALL."                                   
+#> [10] "CTR..LINK.CLICK.THROUGH.RATE."               
+#> [11] "VIDEO.PERCENTAGE.WATCHED"                    
+#> [12] "POST.REACTIONS"                              
+#> [13] "POST.COMMENTS"                               
+#> [14] "POST.SHARES"                                 
+#> [15] "POSITIVE.FEEDBACK"                           
+#> [16] "LINK.CLICKS"                                 
+#> [17] "WEBSITE.REGISTRATIONS.COMPLETED"             
+#> [18] "WEBSITE.LEADS"                               
+#> [19] "WEBSITE.PURCHASES"                           
+#> [20] "WEBSITE.CHECKOUTS.INITIATED.CONVERSION.VALUE"
+#> [21] "WEBSITE.ADDS.TO.WISHLIST"                    
+#> [22] "WEBSITE.CHECKOUTS.INITIATED"                 
+#> [23] "WEBSITE.SEARCHES"                            
+#> [24] "VIDEO.WATCHES.AT.50."                        
+#> [25] "VIDEO.WATCHES.AT.75."                        
+#> [26] "REACH"                                       
+#> [27] "RESULTS"                                     
+#> [28] "RESULT.INDICATOR"                            
+#> [29] "X3.SECOND.VIDEO.VIEWS"                       
+#> [30] "VIDEO.AVERAGE.WATCH.TIME"                    
+#> [31] "BUTTON.CLICKS"                               
+#> [32] "BYGRPVAR"                                    
+#> [33] "S1"                                          
+#> [34] "V1"
 # 2. Now we can use the unique function to see all of the available names and appropriately adjust the filtervar parameter
-unique(myfbfrm$AD.SET.NAME)
-#> [1] "ProBook_AllPg_75kAccSeLaneReg"
+unique(myfbfrm$AD.NAME)
+#> [1] "ProBook1_Teach"          "Div_Pwr_Teach100k+_AllD"
 ```
 
 **Note**: See more examples by entering in RStudio:

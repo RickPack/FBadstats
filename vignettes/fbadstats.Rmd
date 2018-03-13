@@ -16,7 +16,7 @@ curwid <- getOption('width')
 options(width = 750)
 ```
 
-The `FBadGstats` function aggregates across all of the Facebook (FB) ads performance data one provides from FB Ads Manager and indicates the best and worst performers per subgroup / breakdown group. *Disclaimer: This function and the entire `FBadstats` package are not supported or endorsed by Facebook, Inc. Only the user is responsible for its use.*
+The `FBadGstats` function aggregates across all of the Facebook (FB) ads performance data one provides from FB Ads Manager and indicates the best and worst performers per subgroup / breakdown group, as well as the best / worst Campaign, Ad Set, or Ad depending on what is found in the file. *Disclaimer: This function and the entire `FBadstats` package are not supported or endorsed by Facebook, Inc. Only the user is responsible for its use.*
 
 # How to use `FBadGstats`
 ## Easiest use - select a file or folder

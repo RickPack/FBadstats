@@ -1,6 +1,7 @@
 #' Reports statistics across ads from Facebook Ads Manager exported data.
-#' @description Reports statistics for breakdown groups (e.g., Age) across
-#'     ads from Facebook Ads Manager exported data.
+#' @description Reports statistics for breakdown groups (e.g., Age) and
+#'     Campaign / Ad Set / Ad (depending on file's grouping) across
+#'     advertisements from Facebook Ads Manager exported data.
 #'  Displays the best and worst performing breakdown groups with a ranking
 #'     as well as the sum total of a specified event
 #'     (e.g., 'Website Registrations Completed'). Can also distplay a bar
@@ -84,7 +85,7 @@ FBadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
                                        you would like to process.")
         allfls0 <- list.files(dirin)
         allfls1 <- str_subset(allfls0, ".csv$")
-        allfls <- str_c(dirin, "/", allfls1)
+        allfls  <- str_c(dirin, "/", allfls1)
     } else {
     # otherwise, read-in only the specified file
         allfls <- filerd
@@ -93,7 +94,7 @@ FBadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
     for (ff in 1:length(allfls)) {
        filein <- allfls[ff]
 
-       if (filein %in% c("example_PerfClk_AgeGender.csv", "example_DMA.csv")) {
+       if (filein %in% c("example_PerfClk_AgeGender.csv", "example_DMA.csv", "Example_AdsView_Region.csv")) {
            a_file_path <- system.file("extdata", filein, package = "FBadstats")
            example <- 1
         }
@@ -168,26 +169,29 @@ FBadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
         fb_frm <- as_tibble(fb_frm)
         # Identify whether Ad Set , Campaign, or Ad Name appears in file
         if (length(fb_frm_nams[grepl("AD.SET.NAME", toupper(fb_frm_nams))]) > 0) {
+            ad_csv_type   <- "AD.SET.NAME"
             adcomp <- as.character(fb_frm %>%
                       pull(grep("AD.SET.NAME", stringr::str_to_upper(fb_frm_nams))))
         } else if (length(fb_frm_nams[grepl("CAMPAIGN.NAME", toupper(fb_frm_nams))]) > 0) {
+            ad_csv_type   <- "CAMPAIGN.NAME"
             adcomp <- as.character(fb_frm %>%
                       pull(grep("CAMPAIGN.NAME", stringr::str_to_upper(fb_frm_nams))))
         } else if (length(fb_frm_nams[grepl("AD.NAME", toupper(fb_frm_nams))]) > 0) {
+            ad_csv_type   <- "AD.NAME"
             adcomp <- as.character(fb_frm %>%
                       pull(grep("AD.NAME", stringr::str_to_upper(fb_frm_nams))))
         } else stop("File not valid. Have you modified the exported file?")
-
-        fb_frm$CAMPAIGN.NAME <- adcomp
+        fb_frm <- fb_frm %>% mutate(!!as.name(ad_csv_type) := adcomp)
+        fb_frm_nams <- c(fb_frm_nams, ad_csv_type)
         # eliminate total row that appears if selected in Ads Manager
         # then apply filtervar if specified
         fb_frm <- fb_frm %>%
-                 filter(!is.na(CAMPAIGN.NAME) &
-                         str_trim(CAMPAIGN.NAME) != "") %>%
-                 filter(grepl(filtervar, toupper(CAMPAIGN.NAME)))
+                 filter(!is.na(!!(as.name(ad_csv_type))) &
+                         str_trim(!!(as.name(ad_csv_type))) != "") %>%
+                 filter(grepl(filtervar, toupper(!!(as.name(ad_csv_type)))))
         if (filtervarneg != ""){
           fb_frm <- fb_frm %>%
-                 filter(!(grepl(filtervarneg, toupper(CAMPAIGN.NAME))))
+                 filter(!(grepl(filtervarneg, toupper(!!(as.name(ad_csv_type))))))
         }
         fb_frm_nams <- colnames(fb_frm)
         fb_frm_nams2 <- toupper(colnames(fb_frm))
@@ -252,7 +256,7 @@ FBadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
                              Suggest using 'Performance and Clicks' entry in
                              the columns drop-down menu
                              at the right of Ads Manager OR entering sumvar=xxx
-                             e.g., fbadsan(sumvar='Link Clicks')")
+                             e.g., fbadGstats(sumvar='Link Clicks')")
             stop(errvar)
         }
 # Last file check --------------------------
@@ -293,12 +297,21 @@ FBadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
             grpvar <- quo(!!newvar)
             return(grpvar)
         }
-        # The 4th column in the fb_frm_nams2 vector varies depending on
-        # the file used by the user (e.g., Age)
-        grpvar <- grpfunc(newvar = as.name(fb_frm_nams[4]))
+# summary stats (list returned at end with two objects)
+# 1st: breakdown group data frame; 2nd: Ad / Ad Set / Campaign Name groups
+      fb_frm_grp_lst <- list()
+      for(sum_set in 1:2){
+        if (sum_set==1){
+          # The 4th column in the fb_frm_nams2 vector varies depending on
+          # the file used by the user (e.g., Age)
+          grpvar <- grpfunc(newvar = as.name(fb_frm_nams[4]))
+        } else {
+          # Assigned earlier to CAMPAIGN, AD SET, or AD
+          grpvar <- grpfunc(as.name(ad_csv_type))
+        }
 
-        sumnam <- fb_frm_nams3[grep(sumvar, fb_frm_nams3)]
         fb_frm_grp <- fb_frm %>% group_by(!!grpvar)
+        sumnam <- fb_frm_nams3[grep(sumvar, fb_frm_nams3)]
         CTRvar <- grep("CTR..ALL.", toupper(fb_frm_nams2))
         # print ctr data only if requested via parameter
         if (noctr != 1) {
@@ -342,10 +355,10 @@ FBadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
                 if (i == 2) {
                   tmpfrm <- summary_frm_event_rnk
                 }
-                summary_frm_distinct_grp <- left_join(summary_frm_distinct_grp, tmpfrm, by = fb_frm_nams[4])
-            }
+                summary_frm_distinct_grp <- left_join(summary_frm_distinct_grp, tmpfrm)
+                }
         } else {
-            summary_frm_distinct_grp <- left_join(summary_frm_distinct_grp, summary_frm_event_rnk, by = fb_frm_nams[4])
+            summary_frm_distinct_grp <- left_join(summary_frm_distinct_grp, summary_frm_event_rnk)
         }
         summary_frm_distinct_grp[is.na(summary_frm_distinct_grp)] <- 999
         printrow <- min(printrow, nrow(summary_frm_distinct_grp))
@@ -388,17 +401,19 @@ FBadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
         }
         print(paste("Total amount spent: $", sum(summary_frm$sumspent), sep = ""))
 
-
 # Graph section ----------------------------
         if (grphoutTF == TRUE) {
             graphads(summary_frm_distinct_grp, printrow, grpvar, grpvarprint, sumnam,
-                     todaydt, file_nam, spentlim, sumprintvar)
+                     todaydt, file_nam, spentlim, sumprintvar, sum_set)
         }
+        # list returned at end
+        fb_frm_grp_lst[[sum_set]] <- fb_frm_grp
+      }
     }
     # restore stringsAsFactors option to original value
     options(stringsAsFactors=origoptFact)
     # invisibly return fb_frm_grp for use outside of the function
-    invisible(fb_frm_grp)
+    invisible(fb_frm_grp_lst[[1]])
 }
 .onAttach <- function(libname, pkgname) {
     packageStartupMessage(paste0("FB Ads Analysis tool: 'FBadGstats' ",

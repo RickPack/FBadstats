@@ -76,13 +76,14 @@ FBadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervarneg = 'hotreg', pr
 ```
 
 ### Advanced Example 3/3 (Assign FBadGstats call to a variable in order to explore the data outside of FBadGstats)
+##### A list is returned so use [[1]] for breakdown groups and [[2]] for Campaign, Ad, or Ad Set, one of which being automatically detected based on the inputfile
 ```{r example3, fig.width = 10, fig.height = 4.5, fig.align = 'center'}
-myfbfrm <- FBadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervar = 'AllPg', grphout = "NO")
+myfbfrm <- FBadGstats(filerd = "Example_AdsView_Region.csv", filtervar = 'Teach', grphout = "NO")
 ## What are all of the available ad set names?
 # 1. First look at the column names in the data
 colnames(myfbfrm)
 # 2. Now we can use the unique function to see all of the available names and appropriately adjust the filtervar parameter
-unique(myfbfrm$AD.SET.NAME)
+unique(myfbfrm$AD.NAME)
 ```
 
 **Note**: See more examples by entering in RStudio:

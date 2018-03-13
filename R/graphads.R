@@ -9,6 +9,7 @@
 #' @param file_nam text
 #' @param spentlim text
 #' @param sumprintvar text
+#' @param sum_set text
 #'
 #' @return A graph with a complementary table for the best performers
 #' @importFrom ggplot2 ggplot aes scale_x_discrete scale_y_continuous geom_col
@@ -20,11 +21,17 @@
 #' @importFrom dplyr left_join inner_join mutate slice trunc_mat tbl_df
 #' @export
 graphads <- function(summary_frm_distinct_grp, printrow, grpvar, grpvarprint, sumnam, todaydt, file_nam,
-                     spentlim, sumprintvar)
+                     spentlim, sumprintvar, sum_set)
   {
   # Capture the best breakdown groups in sumeventavg
   sumeventavg <- arrange(summary_frm_distinct_grp, rnkevent)
-  statset <- sumeventavg %>% slice(1:min(printrow, 8)) %>% filter(sumevent > 0)
+  # top 8 for breakdown groups
+  if(sum_set == 1){
+   statset <- sumeventavg %>% slice(1:min(printrow, 8)) %>% filter(sumevent > 0)
+  } else {
+  # top 3 for ad / ad set / campaign (potentially long names)
+   statset <- sumeventavg %>% slice(1:min(printrow, 5)) %>% filter(sumevent > 0)
+  }
   sumeventavg_gt0 <- sumeventavg %>% filter(sumevent > 0)
   medtop <- round(median(statset$costevent), 2)
   medall <- round(median(sumeventavg_gt0$costevent), 2)
@@ -49,8 +56,8 @@ graphads <- function(summary_frm_distinct_grp, printrow, grpvar, grpvarprint, su
           text = element_text(size = 08)) +
     xlab(str_c("Best performing (lowest cost) ", grpvarprint)) +
     ylab(str_c("Cost per ", sumnam)) +
-    geom_text(aes(label = paste0("$",costevent,"; Spent = $",
-                                 sumspent)), vjust = 0, size = 03)
+    geom_text(aes(label = paste0("$",costevent,";Spent=$",
+                                 sumspent)), vjust = 0, size = 04)
   plotformsG <- ggplotGrob(plotforms)
   extrainfo <- paste("Median cost (all) only considers where there was at least one ", sumnam, sep = "")
   stat_tbl <- data.frame(medtop, medall, medspent,
