@@ -52,7 +52,7 @@ FBadGstats()
 
 You can select a folder and process all of the .CSV files with:
 ```{r, message=FALSE, eval=FALSE}
-FBadGstats(choosedir="YES")
+FBadGstats(choosedir=TRUE)
 ```
 ## Advanced usage - modifying parameters
 
@@ -61,7 +61,7 @@ FBadGstats(choosedir="YES")
 ## Load FBadstats
 library("FBadstats")
 # Show only the best performing groups and include the graphical output
-FBadGstats(filerd = "example_DMA.csv", grphout = "YES", tblout = "BEST")
+FBadGstats(filerd = "example_DMA.csv", grphout = TRUE, tblout = "BEST")
 ```
 
 ### For A/B testing, use the `filtervar` and `filtervarneg` parameters. 
@@ -71,14 +71,14 @@ At least two events (clicks) must have occurred. Otherwise, an anomalous single 
 
 ### Advanced Example 2/3
 ```{r example2, fig.width = 10, fig.height = 4.5, fig.align = 'center'}
-FBadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervar = 'hotreg',    printrow = 3, minevent = 2, grphout = "NO")
-FBadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervarneg = 'hotreg', printrow = 3, minevent = 2,   grphout = "NO")
+FBadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervar = 'hotreg',    printrow = 3, minevent = 2, grphout = FALSE)
+FBadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervarneg = 'hotreg', printrow = 3, minevent = 2,   grphout = FALSE)
 ```
 
 ### Advanced Example 3/3 (Assign FBadGstats call to a variable in order to explore the data outside of FBadGstats)
 ##### A list is returned so use [[1]] for breakdown groups and [[2]] for Campaign, Ad, or Ad Set, one of which being automatically detected based on the inputfile
 ```{r example3, fig.width = 10, fig.height = 4.5, fig.align = 'center'}
-myfbfrm <- FBadGstats(filerd = "Example_AdsView_Region.csv", filtervar = 'Teach', grphout = "NO")
+myfbfrm <- FBadGstats(filerd = "Example_AdsView_Region.csv", filtervar = 'Teach', grphout = FALSE)
 ## What are all of the available ad set names?
 # 1. First look at the column names in the data
 colnames(myfbfrm)

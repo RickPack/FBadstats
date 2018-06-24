@@ -6,7 +6,7 @@
 \usage{
 FBadGstats(filerd = "", choosedir = "NO", sumvar = "", filtervar = "",
   filtervarneg = "", spentlim = 0, minevent = 0, printrow = 20,
-  tblout = "BOTH", grphout = "YES", ctrstats = "NO")
+  tblout = "BOTH", grphout = TRUE, ctrstats = "NO")
 }
 \arguments{
 \item{filerd}{Filename to read. Must be a CSV file.}
@@ -70,7 +70,7 @@ Reports statistics for breakdown groups (e.g., Age) and
 FBadGstats()
 # similar but one selects a folder and all of the CSV files are processed,
 # and the summarized performance measure is WEBSITE.LEADS.
-FBadGstats(choosedir = "YES", sumvar = "WEBSITE.LEADS")
+FBadGstats(choosedir = TRUE, sumvar = "WEBSITE.LEADS")
 # examine the best and worst performing Direct Marketing Areas (DMA) with
 # respect to the results column containing 'REG' (case-insenstive,
 # so this exampled matched 'Website.Registrations.Completed')

@@ -45,7 +45,7 @@
 #' FBadGstats()
 #' # similar but one selects a folder and all of the CSV files are processed,
 #' # and the summarized performance measure is WEBSITE.LEADS.
-#' FBadGstats(choosedir = "YES", sumvar = "WEBSITE.LEADS")
+#' FBadGstats(choosedir = TRUE, sumvar = "WEBSITE.LEADS")
 #' # examine the best and worst performing Direct Marketing Areas (DMA) with
 #' # respect to the results column containing 'REG' (case-insenstive,
 #' # so this exampled matched 'Website.Registrations.Completed')
@@ -64,7 +64,7 @@
 FBadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
                        filtervar = "", filtervarneg = "", spentlim = 0,
                        minevent = 0, printrow = 20, tblout = "BOTH",
-                       grphout = "YES", ctrstats = "NO") {
+                       grphout = TRUE, ctrstats = "NO") {
     # Reminder to clean-up code regularly with:
     # formatR::tidy_dir('R')
 # Load data ---------------------------
@@ -79,7 +79,7 @@ FBadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
     # print today's date on the graph later
     todaydt <- Sys.Date()
     # parameter to process all CSV files in a selected folder
-    if (choosedir == "YES") {
+    if (choosedir == TRUE) {
         dirin <- choose.dir(caption = "Select a folder containing the CSV files
                                        exported from Facebook Ads Manager that
                                        you would like to process.")
@@ -90,8 +90,17 @@ FBadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
     # otherwise, read-in only the specified file
         allfls <- filerd
     }
+    message("early1_2")
+
+    if(length(allfls)==1){
+      if(is.na(allfls)){
+      # Occurs if run aborted with choosedir = TRUE
+      stop("Run aborted no valid files found in folder")}
+    }
 
     for (ff in 1:length(allfls)) {
+      # Start tryCatch that initiates with every run of ff for loop
+      tryCatch({
        filein <- allfls[ff]
 
        if (filein %in% c("example_PerfClk_AgeGender.csv", "example_DMA.csv", "Example_AdsView_Region.csv")) {
@@ -106,7 +115,7 @@ FBadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
         grphout <- toupper(grphout)
 # Parameter checks -------------------------
 # used in testparam.R
-        if (grphout == "YES" | grphout == TRUE) {
+        if (grphout == TRUE | grphout == TRUE) {
             grphoutTF <- TRUE
         } else if (grphout == "NO" | grphout == FALSE) {
             grphoutTF <- FALSE
@@ -127,14 +136,14 @@ FBadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
             filein <- choose.files(caption = "Select a single .CSV file
                                    exported from Facebook Ads Manager.")
             if (length(filein) > 1){
-              stop("Error: More than one file appears to have been selected.")
+              stop("More than one file appears to have been selected.")
             }
         }
         # capture only the filename for printing in graph caption
         #  and summary tables
         file_nam <- basename(filein)
 
-
+        message("early3")
 # file format check ------------------------
         if (example == 1) {
             fb_frm <- data.frame(read.csv(a_file_path))
@@ -229,9 +238,9 @@ FBadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
             stop(errvar)
         } else if (length(grep(sumvar, fb_frm_nams3)) == 0 & sumvar != "") {
             # need to stop recycling
-            errvar <- str_c("For ", file_nam, ": sumvar parameter provided
+            errvar <- str_c("For ", file_nam[1], ": sumvar parameter provided
                              but no matching summarizing variables found in
-                             exported data. Provided sumvar was: ", sumvar, ".
+                             exported data. Provided sumvar was: ", sumvar[1], ".
                              Available columns in data are the following
                              (not all may be summarizable): ",
                              fb_frm_nams3)
@@ -276,7 +285,7 @@ FBadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
         fb_frm <- fb_frm %>% mutate_if(is.numeric,
                                      (funs(replace(., is.infinite(.), 0))))
 # ctrstats section -------------------------
-        if (ctrstats %in% c("YES", 1) & length(grep("RATE", fb_frm_nams3)) >= 1) {
+        if (ctrstats %in% c(TRUE, 1) & length(grep("RATE", fb_frm_nams3)) >= 1) {
             if (length(grep("CTR..LINK.CLICK.THROUGH.RATE.", fb_frm_nams3)) == 1) {
                 noctr <- 0
                 fb_frm$C1 <- as.numeric(fb_frm$CTR..LINK.CLICK.THROUGH.RATE.)
@@ -407,13 +416,18 @@ FBadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
                      todaydt, file_nam, spentlim, sumprintvar, sum_set)
         }
         # list returned at end
+        message("markerbottom_1")
         fb_frm_grp_lst[[sum_set]] <- fb_frm_grp
       }
+      # End tryCatch that initiates with every run of ff for loop
+      }, error=function(e){cat("ERROR :",conditionMessage(e), "\n")})
     }
     # restore stringsAsFactors option to original value
     options(stringsAsFactors=origoptFact)
     # invisibly return fb_frm_grp for use outside of the function
-    invisible(fb_frm_grp_lst[[1]])
+    if(exists('fb_frm_grp_lst')){
+      invisible(fb_frm_grp_lst[[1]])
+    }
 }
 .onAttach <- function(libname, pkgname) {
     packageStartupMessage(paste0("FB Ads Analysis tool: 'FBadGstats' ",

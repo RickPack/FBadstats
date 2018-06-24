@@ -45,7 +45,7 @@ FBadGstats()
 You can select a folder and process all of the .CSV files with:
 
 ``` r
-FBadGstats(choosedir="YES")
+FBadGstats(choosedir=TRUE)
 ```
 
 Advanced usage - modifying parameters
@@ -57,53 +57,62 @@ Advanced usage - modifying parameters
 ## Load FBadstats
 library("FBadstats")
 # Show only the best performing groups and include the graphical output
-FBadGstats(filerd = "example_DMA.csv", grphout = "YES", tblout = "BEST")
+FBadGstats(filerd = "example_DMA.csv", grphout = TRUE, tblout = "BEST")
+#> early1_2
+#> early3
 #> Joining, by = "DMA.REGION"
 #> [1] "-------------------------------------------------------------"
-#> [1] "BEST: LINK CLICKS in example_DMA.csv"
+#> [1] "BEST: RESULTS in example_DMA.csv"
 #>                    DMA.REGION rnkevent sumevent costevent sumspent
-#> 1                  Wilmington        1        1      0.32     0.32
-#> 2                 Gainesville        2        1      0.35     0.35
-#> 3      Little Rock-Pine Bluff        3        8      0.38     3.00
-#> 4                    Syracuse        4        1      0.41     0.41
-#> 5                   Anchorage        5        1      0.45     0.45
-#> 6                   Knoxville        6        1      0.48     0.48
-#> 7                  Cincinnati        7        7      0.51     3.57
-#> 8   Tampa-St. Pete (Sarasota)        8        7      0.53     3.73
-#> 9        El Paso (Las Cruces)        9        1      0.54     0.54
-#> 10        Richmond-Petersburg       10        5      0.58     2.88
-#> 11      Tucson (Sierra Vista)       11        1      0.59     0.59
-#> 12                  Milwaukee       12        2      0.66     1.31
-#> 13          Waco-Temple-Bryan       13        3      0.68     2.05
-#> 14                Baton Rouge       14        6      0.69     4.12
-#> 15              Lafayette, LA       15        2      0.71     1.42
-#> 16               Columbus, OH       16        5      0.74     3.68
-#> 17                    Buffalo       17        2      0.76     1.51
-#> 18 Grand Rapids-Kalmzoo-B.Crk       18        1      0.87     0.87
-#> 19                 Pittsburgh       19        2      0.89     1.78
-#> 20                  San Diego       20        2      0.92     1.83
-#> [1] "Number of groups in all of data: 135"
-#> [1] "Number of DMA REGION groups with at least one LINK CLICKS and minimum spend of $0 = 63"
-#> [1] "Total amount spent: $320.47"
+#> 1             Casper-Riverton        1        1      0.00     0.00
+#> 2             Duluth-Superior        1        1      0.00     0.00
+#> 3  Ft. Smith-Fay-Sprngdl-Rgrs        1        5      0.00     0.02
+#> 4                      Juneau        1        1      0.00     0.00
+#> 5        La Crosse-Eau Claire        1        2      0.00     0.01
+#> 6                     Mankato        1        2      0.00     0.01
+#> 7  Rochestr-Mason City-Austin        1        2      0.00     0.00
+#> 8  Santabarbra-Sanmar-Sanluob        1        4      0.00     0.02
+#> 9                    Billings        9        2      0.01     0.02
+#> 10              Chico-Redding        9        8      0.01     0.08
+#>  [ reached getOption("max.print") -- omitted 10 rows ]
+#> [1] "Number of groups in all of data: 197"
+#> [1] "Number of DMA REGION groups with at least one RESULTS and minimum spend of $0 = 184"
+#> [1] "Total amount spent: $420.75"
+#> markerbottom_1
 #> Joining, by = "AD.SET.NAME"
 ```
 
 <img src="README-example1-1.png" style="display: block; margin: auto;" />
 
     #> [1] "-------------------------------------------------------------"
-    #> [1] "BEST: LINK CLICKS in example_DMA.csv"
-    #>                      AD.SET.NAME rnkevent sumevent costevent sumspent
-    #> 1 ProBook_xPg_SendLane2544hotreg        1       91      1.30   118.02
-    #> 2  ProBook_AllPg_75kAccSeLaneReg        2       13      1.40    18.26
-    #> 3    ProBook_SendLaneB2544hotreg        3        5      1.42     7.10
-    #> 4      ProBook_Pg_LkDev75k+_5562        4        8      1.60    12.79
-    #> 5      ProBook_Pg_LkDev75k+_3544        5       34      1.69    57.39
-    #> 6     ProBook_Pg_75kAccSeLaneReg        6       45      1.82    81.93
-    #> 7        ProBook_Pg_75kSeLaneReg        7        3      2.12     6.35
-    #> 8  ProBook_xPg_6txt_SendLane2544        8        4      3.76    15.03
-    #> [1] "Number of groups in all of data: 11"
-    #> [1] "Number of AD SET NAME groups with at least one LINK CLICKS and minimum spend of $0 = 8"
-    #> [1] "Total amount spent: $320.47"
+    #> [1] "BEST: RESULTS in example_DMA.csv"
+    #>                                  AD.SET.NAME rnkevent sumevent costevent
+    #> 1                      Vid: "I Quit."_Iyanla        1     3951      0.01
+    #> 2            Vid: "I Quit."_Iyanla_CarDevInc        1      528      0.01
+    #> 3                    Vid: "I Quit."_sub95vid        1     2906      0.01
+    #> 4                         Vid_DHardy1_Iyanla        1     2505      0.01
+    #> 5                 Vid: I Quit: Retarg50_real        5       45      0.02
+    #> 6        Pwr2_Retarg_sub75vid_EnergyCarousel        6        7      0.36
+    #> 7          Pwr2_TeachspecInst_EnergyCarousel        7      124      0.44
+    #> 8              Pwr2_Teachspec_EnergyCarousel        8        1      0.60
+    #> 9      Pwr2_sub25lngvid40+_vidEnergyCarousel        9       21      0.71
+    #> 10                        ProBook_Pg_95vidlk       10       58      1.13
+    #>    sumspent
+    #> 1     33.09
+    #> 2      5.05
+    #> 3     38.04
+    #> 4     35.02
+    #> 5      0.91
+    #> 6      2.55
+    #> 7     54.37
+    #> 8      0.60
+    #> 9     14.95
+    #> 10    65.33
+    #>  [ reached getOption("max.print") -- omitted 10 rows ]
+    #> [1] "Number of groups in all of data: 36"
+    #> [1] "Number of AD SET NAME groups with at least one RESULTS and minimum spend of $0 = 28"
+    #> [1] "Total amount spent: $420.75"
+    #> markerbottom_1
 
 <img src="README-example1-2.png" style="display: block; margin: auto;" />
 
@@ -116,7 +125,9 @@ At least two events (clicks) must have occurred. Otherwise, an anomalous single 
 ### Advanced Example 2/3
 
 ``` r
-FBadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervar = 'hotreg',    printrow = 3, minevent = 2, grphout = "NO")
+FBadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervar = 'hotreg',    printrow = 3, minevent = 2, grphout = FALSE)
+#> early1_2
+#> early3
 #> Joining, by = "AGE_GENDER"
 #> [1] "-------------------------------------------------------------"
 #> [1] "WORST: RESULTS in example_PerfClk_AgeGender.csv"
@@ -132,6 +143,7 @@ FBadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervar = 'hotreg',    pr
 #> [1] "Number of groups in all of data: 6"
 #> [1] "Number of AGE_GENDER groups with at least one RESULTS and minimum spend of $0 = 3"
 #> [1] "Total amount spent: $125.76"
+#> markerbottom_1
 #> Joining, by = "AD.SET.NAME"
 #> [1] "-------------------------------------------------------------"
 #> [1] "WORST: RESULTS in example_PerfClk_AgeGender.csv"
@@ -145,7 +157,10 @@ FBadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervar = 'hotreg',    pr
 #> [1] "Number of groups in all of data: 3"
 #> [1] "Number of AD SET NAME groups with at least one RESULTS and minimum spend of $0 = 2"
 #> [1] "Total amount spent: $125.76"
-FBadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervarneg = 'hotreg', printrow = 3, minevent = 2,   grphout = "NO")
+#> markerbottom_1
+FBadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervarneg = 'hotreg', printrow = 3, minevent = 2,   grphout = FALSE)
+#> early1_2
+#> early3
 #> Joining, by = "AGE_GENDER"
 #> [1] "-------------------------------------------------------------"
 #> [1] "WORST: RESULTS in example_PerfClk_AgeGender.csv"
@@ -161,6 +176,7 @@ FBadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervarneg = 'hotreg', pr
 #> [1] "Number of groups in all of data: 14"
 #> [1] "Number of AGE_GENDER groups with at least one RESULTS and minimum spend of $0 = 5"
 #> [1] "Total amount spent: $258.62"
+#> markerbottom_1
 #> Joining, by = "AD.SET.NAME"
 #> [1] "-------------------------------------------------------------"
 #> [1] "WORST: RESULTS in example_PerfClk_AgeGender.csv"
@@ -176,6 +192,7 @@ FBadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervarneg = 'hotreg', pr
 #> [1] "Number of groups in all of data: 10"
 #> [1] "Number of AD SET NAME groups with at least one RESULTS and minimum spend of $0 = 7"
 #> [1] "Total amount spent: $258.62"
+#> markerbottom_1
 ```
 
 ### Advanced Example 3/3 (Assign FBadGstats call to a variable in order to explore the data outside of FBadGstats)
@@ -183,7 +200,9 @@ FBadGstats(filerd = "example_PerfClk_AgeGender.csv", filtervarneg = 'hotreg', pr
 ##### A list is returned so use \[\[1\]\] for breakdown groups and \[\[2\]\] for Campaign, Ad, or Ad Set, one of which being automatically detected based on the inputfile
 
 ``` r
-myfbfrm <- FBadGstats(filerd = "Example_AdsView_Region.csv", filtervar = 'Teach', grphout = "NO")
+myfbfrm <- FBadGstats(filerd = "Example_AdsView_Region.csv", filtervar = 'Teach', grphout = FALSE)
+#> early1_2
+#> early3
 #> Joining, by = "IMPRESSION.DEVICE"
 #> [1] "-------------------------------------------------------------"
 #> [1] "WORST: RESULTS in Example_AdsView_Region.csv"
@@ -199,6 +218,7 @@ myfbfrm <- FBadGstats(filerd = "Example_AdsView_Region.csv", filtervar = 'Teach'
 #> [1] "Number of groups in all of data: 7"
 #> [1] "Number of IMPRESSION DEVICE groups with at least one RESULTS and minimum spend of $0 = 3"
 #> [1] "Total amount spent: $15.23"
+#> markerbottom_1
 #> Joining, by = "AD.NAME"
 #> [1] "-------------------------------------------------------------"
 #> [1] "WORST: RESULTS in Example_AdsView_Region.csv"
@@ -212,6 +232,7 @@ myfbfrm <- FBadGstats(filerd = "Example_AdsView_Region.csv", filtervar = 'Teach'
 #> [1] "Number of groups in all of data: 2"
 #> [1] "Number of AD NAME groups with at least one RESULTS and minimum spend of $0 = 2"
 #> [1] "Total amount spent: $15.23"
+#> markerbottom_1
 ## What are all of the available ad set names?
 # 1. First look at the column names in the data
 colnames(myfbfrm)

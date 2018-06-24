@@ -37,9 +37,9 @@ FBadGstats()
 ### Use the output
 ![Portion of FBadGstats output](README-example.png)
 
-[Windows-Only] Running the function with `choosedir` set to "YES" prompts you with a window in which you can select a folder and `FBadGstats` runs on every .CSV file in that directory / folder.
+[Windows-Only] Running the function with `choosedir` set to TRUE prompts you with a window in which you can select a folder and `FBadGstats` runs on every .CSV file in that directory / folder.
 ```{r choosedir_param, message=FALSE, eval=FALSE}
-FBadGstats(choosedir="YES")
+FBadGstats(choosedir=TRUE)
 ```
 
 ## Advanced use - use one of the >10 parameters
@@ -54,31 +54,31 @@ Setting the `tblout` parameter to BOTH causes the best and worst performers to a
     
 ### now call the function and provide parameters as desired
 ```{r tbloutboth_param, message=FALSE, eval=FALSE}
-FBadGstats(filerd = "example_PerfClk_AgeGender.csv", grphout = "NO", tblout = "BOTH")
+FBadGstats(filerd = "example_PerfClk_AgeGender.csv", grphout = FALSE, tblout = "BOTH")
 ```
 
 ### Show only the best breakdown groups in the table:
 **Note:** `FBadGstats` graphs *always* show only the best breakdown groups.
 ```{r graphbest_param}
-FBadGstats(filerd = "example_PerfClk_AgeGender.csv", grphout = "YES", tblout = "BEST")
+FBadGstats(filerd = "example_PerfClk_AgeGender.csv", grphout = TRUE, tblout = "BEST")
 ```
 
 ### Parameter highlight: `spentlim`
 I enjoy exploring DMAs (Designated Market Areas) as targets for advertising. Let's look at the worst performers.
 ```{r spentlim} 
-FBadGstats(filerd = "example_DMA.csv", grphout = "NO", tblout = "WORST")
+FBadGstats(filerd = "example_DMA.csv", grphout = FALSE, tblout = "WORST")
 ```
 Look at all the regions with small amounts spent on them like #19 *Dayton* ($1.88). Perhaps not enough money has been spent in those regions, at least yet, to make their exclusion worthwhile.
 
 We can use the `spentlim` parameter to specify a minimum amount spent and therefore capture the DMAs that are proportionally more wasteful. By setting the minimum spent to $5, DMAs including *Dayton* no longer appear and *New York* rises to the second worst slot.
 ```{r spentlim5} 
-FBadGstats(filerd = "example_DMA.csv", grphout = "NO", tblout = "WORST", spentlim = 5)
+FBadGstats(filerd = "example_DMA.csv", grphout = FALSE, tblout = "WORST", spentlim = 5)
 ```
 ### Parameter highlight: `printrow`, `minevent`, `sumvar`
 Finally, the 15 worst with respect to *WEBSITE.REGISTRATIONS.COMPLETED* using the `sumvar` parameter. Notice that the entire column entry does not need to be typed for this case-insensitive parameter. "Regist" was sufficient.
 No limit on the amount spent (i.e., no `minspent` paramter in function call) but at least two *WEBSITE.REGISTRATIONS.COMPLETED* must have occurred:
 ```{r moreparams} 
-FBadGstats(filerd = "example_DMA.csv", grphout = "NO", tblout = "WORST", sumvar = "Regist", printrow = 15, minevent = 2)
+FBadGstats(filerd = "example_DMA.csv", grphout = FALSE, tblout = "WORST", sumvar = "Regist", printrow = 15, minevent = 2)
 ```
 ```{r restoreoptions, echo=FALSE, cache=FALSE}
 options(width = curwid)
