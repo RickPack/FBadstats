@@ -378,23 +378,23 @@ FBadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
             if (tblout %in% c("WORST", "BOTH")) {
                 sumctravg <- arrange(summary_frm_distinct_grp, rnkctravg)
                 print(str_c("WORST: ", ctrnam, " in ", file_nam))
-                print(data.frame(sumctravg[1:printrow, ]))
+                print(tbl_df(data.frame(sumctravg[1:printrow, ])), n = printrow)
             }
             if (tblout %in% c("BEST", "BOTH")) {
                 sumctravg <- arrange(summary_frm_distinct_grp, desc(rnkctravg))
                 print(str_c("BEST: ", ctrnam, " in ", file_nam))
-                print(data.frame(sumctravg[1:printrow, ]))
+                print(tbl_df(data.frame(sumctravg[1:printrow, ])), n = printrow)
             }
         }
         if (tblout %in% c("WORST", "BOTH")) {
             sumeventavg <- arrange(summary_frm_distinct_grp, desc(rnkevent))
             print(str_c("WORST: ", sumprintvar, " in ", file_nam))
-            print(data.frame(sumeventavg[1:printrow, ]))
+            print(tbl_df(data.frame(sumeventavg[1:printrow, ])), n = printrow)
         }
         if (tblout %in% c("BEST", "BOTH")) {
             sumeventavg <- arrange(summary_frm_distinct_grp, rnkevent)
             print(str_c("BEST: ", sumprintvar, " in ", file_nam))
-            print(data.frame(sumeventavg[1:printrow, ]))
+            print(tbl_df(data.frame(sumeventavg[1:printrow, ])), n = printrow)
         }
         grpvarprint <- gsub("[.]", " ", as.character(grpvar[2]))
         print(paste("Number of groups in all of data: ",
@@ -426,7 +426,9 @@ FBadGstats <- function(filerd = "", choosedir = "NO", sumvar = "",
     options(stringsAsFactors=origoptFact)
     # invisibly return fb_frm_grp for use outside of the function
     if(exists('fb_frm_grp_lst')){
-      invisible(fb_frm_grp_lst[[1]])
+      if(length(fb_frm_grp_lst) > 0){
+       invisible(fb_frm_grp_lst[[1]])
+      }
     }
 }
 .onAttach <- function(libname, pkgname) {

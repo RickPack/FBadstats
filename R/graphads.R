@@ -36,6 +36,12 @@ graphads <- function(summary_frm_distinct_grp, printrow, grpvar, grpvarprint, su
   medtop <- round(median(statset$costevent), 2)
   medall <- round(median(sumeventavg_gt0$costevent), 2)
   medspent <- round(median(statset$sumspent))
+
+  # Colors from Dr. Jenny Bryan's STAT545A course
+  # https://www.stat.ubc.ca/~jenny/STAT545A/block14_colors.html
+  colors <- c('chartreuse3', 'cornflowerblue', 'darkgoldenrod1', 'peachpuff3',
+              'mediumorchid2', 'turquoise3', 'wheat4', 'slategray2')
+  colors <- colors[1:length(unique(statset %>% pull(!!grpvar)))]
   plotforms <- ggplot(statset) +
     aes(x = (statset %>% pull(!!grpvar)),
         y = costevent, size = 06,
@@ -44,20 +50,29 @@ graphads <- function(summary_frm_distinct_grp, printrow, grpvar, grpvarprint, su
                        pull(!!grpvar)) +
     scale_y_continuous(
       labels = scales::dollar) +
-    geom_col(show.legend = FALSE) +
+    geom_col(show.legend = FALSE, fill = colors) +
     labs(title = paste("Facebook Ads Analysis for ",
                        sumnam, ": Created on  ", todaydt,
                        sep = ""),
          caption = paste("Data from ",
                          file_nam,
                          sep = "")) +
-    theme(plot.title = element_text(hjust = 0.5),
+    theme(plot.title = element_text(hjust = 0.5, color = '#EEEEEE',
+                                    size = 28),
           legend.position="none",
-          text = element_text(size = 08)) +
+          text = element_text(size = 14, color = '#EEEEEE'),
+          axis.text = element_text(size = 10, color = '#EEEEEE'),
+          panel.background = element_rect(fill = '#333333'),
+          plot.background = element_rect(fill = '#333333'),
+          panel.grid = element_blank(),
+          legend.background = element_blank(),
+          legend.key = element_blank()) +
     xlab(str_c("Best performing (lowest cost) ", grpvarprint)) +
     ylab(str_c("Cost per ", sumnam)) +
-    geom_text(aes(label = paste0("$",costevent,";Spent=$",
-                                 sumspent)), vjust = 0, size = 04)
+    geom_text(aes(label = paste0("$", costevent, ";Spent=$",
+                                 sumspent)),
+              vjust = -0.3, size = 04,
+              color = '#CCCCCC')
   plotformsG <- ggplotGrob(plotforms)
   extrainfo <- paste("Median cost (all) only considers where there was at least one ", sumnam, sep = "")
   stat_tbl <- data.frame(medtop, medall, medspent,
