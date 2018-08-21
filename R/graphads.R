@@ -14,6 +14,7 @@
 #' @return A graph with a complementary table for the best performers
 #' @importFrom ggplot2 ggplot aes scale_x_discrete scale_y_continuous geom_col
 #' @importFrom ggplot2 labs xlab ylab theme element_text ggplotGrob geom_text
+#' @importFrom ggplot2 geom_text element_blank element_rect
 #' @importFrom gridExtra grid.arrange tableGrob ttheme_minimal arrangeGrob
 #' @importFrom stringr str_c str_to_upper str_subset str_trim
 #' @importFrom dplyr select %>% as_tibble pull filter contains quo group_by
@@ -35,7 +36,7 @@ graphads <- function(summary_frm_distinct_grp, printrow, grpvar, grpvarprint, su
   sumeventavg_gt0 <- sumeventavg %>% filter(sumevent > 0)
   medtop <- round(median(statset$costevent), 2)
   medall <- round(median(sumeventavg_gt0$costevent), 2)
-  medspent <- round(median(statset$sumspent))
+  medspent <- round(median(statset$sumspent), 2)
 
   # Colors from Dr. Jenny Bryan's STAT545A course
   # https://www.stat.ubc.ca/~jenny/STAT545A/block14_colors.html
