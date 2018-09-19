@@ -60,8 +60,10 @@ FBadGstats(choosedir=TRUE)
 ```{r example1, fig.width = 10, fig.height = 4.5, fig.align = 'center'}
 ## Load FBadstats
 library("FBadstats")
-# Show only the best performing groups and include the graphical output
-FBadGstats(filerd = "example_DMA.csv", grphout = TRUE, tblout = "BEST")
+# Show only the best performing groups and include the graphical output, 
+# minimum spend to appear is a dollar ($1), analyzed result is Unique CTR (Link Click-Through Rate)
+FBadGstats(filerd = "example_DMA.csv", grphout = TRUE, tblout = "BEST", 
+           spentlim = 1, sumvar = 'UNIQUE.CTR')
 ```
 
 ### For A/B testing, use the `filtervar` and `filtervarneg` parameters. 
