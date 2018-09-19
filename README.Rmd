@@ -63,7 +63,7 @@ library("FBadstats")
 # Show only the best performing groups and include the graphical output, 
 # minimum spend to appear is a dollar ($1), analyzed result is Unique CTR (Link Click-Through Rate)
 FBadGstats(filerd = "example_DMA.csv", grphout = TRUE, tblout = "BEST", 
-           spentlim = 1, sumvar = 'UNIQUE.CTR')
+           spentlim = 1, sumvar = 'LINK.CLICKS')
 ```
 
 ### For A/B testing, use the `filtervar` and `filtervarneg` parameters. 

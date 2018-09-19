@@ -59,37 +59,37 @@ library("FBadstats")
 # Show only the best performing groups and include the graphical output, 
 # minimum spend to appear is a dollar ($1), analyzed result is Unique CTR (Link Click-Through Rate)
 FBadGstats(filerd = "example_DMA.csv", grphout = TRUE, tblout = "BEST", 
-           spentlim = 1, sumvar = 'UNIQUE.CTR')
+           spentlim = 1, sumvar = 'LINK.CLICKS')
 #> early1_2
 #> early3
 #> Joining, by = "DMA.REGION"
 #> [1] "-------------------------------------------------------------"
-#> [1] "BEST: UNIQUE CTR  LINK CLICK THROUGH RATE  in example_DMA.csv"
+#> [1] "BEST: LINK CLICKS in example_DMA.csv"
 #> # A tibble: 20 x 5
 #>    DMA.REGION                 rnkevent sumevent costevent sumspent
 #>    <chr>                         <int>    <dbl>     <dbl>    <dbl>
-#>  1 Flint-Saginaw-Bay City            1   117.        0.01     1.42
-#>  2 Shreveport                        1   208.        0.01     1.62
-#>  3 Hartford & New Haven              3   108.        0.02     2.16
-#>  4 Rochester, NY                     3    59.1       0.02     1.4 
-#>  5 San Antonio                       5    32.1       0.03     1.12
-#>  6 Las Vegas                         6    56.7       0.04     2.24
-#>  7 Lafayette, LA                     7    25.3       0.05     1.19
-#>  8 Myrtle Beach-Florence             7    37.2       0.05     1.88
-#>  9 Sacramnto-Stkton-Modesto          7    92.3       0.05     4.21
-#> 10 Orlando-Daytona Bch-Melbrn       10    63.1       0.08     4.78
-#> 11 Tallahassee-Thomasville          11    19.0       0.09     1.67
-#> 12 Boston (Manchester)              12    32.3       0.1      3.1 
-#> 13 Columbus, GA (Opelika, Al)       12    14.7       0.1      1.42
-#> 14 Minneapolis-St. Paul             12    11.8       0.1      1.18
-#> 15 Savannah                         15    19.2       0.11     2.19
-#> 16 Seattle-Tacoma                   15    21.8       0.11     2.38
-#> 17 Nashville                        17    27.0       0.14     3.89
-#> 18 Portland, OR                     18     8.33      0.15     1.25
-#> 19 Miami-Ft. Lauderdale             19    43.5       0.16     7   
-#> 20 Greenville-N.Bern-Washngtn       20    10.2       0.17     1.73
+#>  1 Lafayette, LA                     1        6      0.2      1.19
+#>  2 Myrtle Beach-Florence             2        5      0.38     1.88
+#>  3 Boston (Manchester)               3        8      0.39     3.1 
+#>  4 Memphis                           4       21      0.4      8.36
+#>  5 Savannah                          5        5      0.44     2.19
+#>  6 Montgomery-Selma                  6        6      0.46     2.73
+#>  7 Flint-Saginaw-Bay City            7        3      0.47     1.42
+#>  8 Sacramnto-Stkton-Modesto          7        9      0.47     4.21
+#>  9 Cleveland-Akron (Canton)          9       10      0.54     5.43
+#> 10 Shreveport                        9        3      0.54     1.62
+#> 11 Atlanta                          11       45      0.56    25.1 
+#> 12 Las Vegas                        11        4      0.56     2.24
+#> 13 San Antonio                      11        2      0.56     1.12
+#> 14 St. Louis                        11        8      0.56     4.49
+#> 15 Tallahassee-Thomasville          11        3      0.56     1.67
+#> 16 Minneapolis-St. Paul             16        2      0.59     1.18
+#> 17 Baltimore                        17       12      0.6      7.26
+#> 18 Indianapolis                     18        6      0.61     3.68
+#> 19 Portland, OR                     19        2      0.62     1.25
+#> 20 Greensboro-H.Point-W.Salem       20       10      0.63     6.29
 #> [1] "Number of groups in all of data: 197"
-#> [1] "Number of DMA REGION groups with at least one UNIQUE CTR  LINK CLICK THROUGH RATE  and minimum spend of $1 = 62"
+#> [1] "Number of DMA REGION groups with at least one LINK CLICKS and minimum spend of $1 = 63"
 #> [1] "Total amount spent: $420.75"
 #> markerbottom_1
 #> Joining, by = "AD.SET.NAME"
@@ -98,32 +98,32 @@ FBadGstats(filerd = "example_DMA.csv", grphout = TRUE, tblout = "BEST",
 <img src="README-example1-1.png" style="display: block; margin: auto;" />
 
     #> [1] "-------------------------------------------------------------"
-    #> [1] "BEST: UNIQUE CTR  LINK CLICK THROUGH RATE  in example_DMA.csv"
+    #> [1] "BEST: LINK CLICKS in example_DMA.csv"
     #> # A tibble: 20 x 5
     #>    AD.SET.NAME                        rnkevent sumevent costevent sumspent
     #>    <chr>                                 <int>    <dbl>     <dbl>    <dbl>
-    #>  1 Pwr2_Retarg_sub75vid_EnergyCarous~        1   115.       0.02      2.55
-    #>  2 Pwr2_sub25lngInst_EnergyCarousel          1   180.       0.02      3.92
-    #>  3 Pwr2_sub25lngvidspec_vidEnergyCar~        1   295        0.02      5.79
-    #>  4 ProBook_Pg_TeachLk                        4   100        0.03      3.02
-    #>  5 Pwr2_sub25lngvidInst_vidEnergyCar~        5    25        0.06      1.48
-    #>  6 Pwr2_TeachspecInst_DarrenDaily            6   588.       0.08     49.1 
-    #>  7 Pwr2_sub95vidInst_EnergyCarousel          7    36.7      0.09      3.42
-    #>  8 Pwr2_Teachspec_vidEnergyCarousel          7    50        0.09      4.57
-    #>  9 Pwr2_TeachspecInst_EnergyCarousel         9   439.       0.12     54.4 
-    #> 10 Event: Ryan's Race for 1st Place_~       10    16.7      0.13      2.19
-    #> 11 ProBook_Pg_TeachSpec                     11    23.1      0.14      3.32
-    #> 12 Pwr2_TeachSpecDT_vidEnergyCarousel       12    44.2      0.18      7.81
-    #> 13 ProBook_Pg_95vidlk                       13   274.       0.24     65.3 
-    #> 14 Event: Ryan's Race for 1st Place_~       14    14.3      0.25      3.57
-    #> 15 Pwr2_sub75vid_DarrenDaily                15    18.5      0.26      4.84
-    #> 16 Pwr2_sub75vid_vidEnergyCarousel          16    33.1      0.290     9.53
-    #> 17 Pwr2_sub25lngvid40+_vidEnergyCaro~       17    39.5      0.38     15.0 
-    #> 18 Vid_DHardy1_Iyanla                       18    89.1      0.39     35.0 
-    #> 19 Pwr2_TeachspecInstO_DarrenDaily          19     3.03     1.58      4.78
-    #> 20 Pwr2_MercerInst_EnergyCarousel           20     1.98     6.12     12.2 
+    #>  1 Pwr2_TeachspecInst_EnergyCarousel         1      199      0.27    54.4 
+    #>  2 Pwr2_Retarg_sub75vid_EnergyCarous~        2        8      0.32     2.55
+    #>  3 Pwr2_TeachspecInst_DarrenDaily            3      119      0.41    49.1 
+    #>  4 Pwr2_sub25lngvidspec_vidEnergyCar~        4        9      0.64     5.79
+    #>  5 Pwr2_sub25lngInst_EnergyCarousel          5        6      0.65     3.92
+    #>  6 Pwr2_MercerInst_EnergyCarousel            6       14      0.87    12.2 
+    #>  7 ProBook_Pg_95vidlk                        7       67      0.98    65.3 
+    #>  8 Pwr2_RTP4562_vidEnergyCarousel            8       12      1.07    12.9 
+    #>  9 ProBook_Pg_TeachSpec                      9        3      1.11     3.32
+    #> 10 Pwr2_sub25lngvid40+_vidEnergyCaro~       10       11      1.36    15.0 
+    #> 11 Pwr2_sub25lngvidInst_vidEnergyCar~       11        1      1.48     1.48
+    #> 12 Pwr2_sub75vid_DarrenDaily                12        3      1.61     4.84
+    #> 13 Pwr2_TeachSpecRTP_vidEnergyCarous~       13        5      1.65     8.25
+    #> 14 Pwr2_sub95vidInst_EnergyCarousel         14        2      1.71     3.42
+    #> 15 Vid_DHardy1_Iyanla                       15       19      1.84    35.0 
+    #> 16 Event: Ryan's Race for 1st Place_~       16        1      2.19     2.19
+    #> 17 Pwr2_Teachspec_vidEnergyCarousel         17        2      2.29     4.57
+    #> 18 Pwr2_TeachSpecDT_vidEnergyCarousel       18        3      2.6      7.81
+    #> 19 Pwr2_Teach95vidRTP_vidEnergyCarou~       19        1      2.92     2.92
+    #> 20 ProBook_Pg_TeachLk                       20        1      3.02     3.02
     #> [1] "Number of groups in all of data: 36"
-    #> [1] "Number of AD SET NAME groups with at least one UNIQUE CTR  LINK CLICK THROUGH RATE  and minimum spend of $1 = 23"
+    #> [1] "Number of AD SET NAME groups with at least one LINK CLICKS and minimum spend of $1 = 23"
     #> [1] "Total amount spent: $420.75"
     #> markerbottom_1
 

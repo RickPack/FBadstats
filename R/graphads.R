@@ -52,17 +52,19 @@ graphads <- function(summary_frm_distinct_grp, printrow, grpvar, grpvarprint, su
     scale_y_continuous(
       labels = scales::dollar) +
     geom_col(show.legend = FALSE, fill = colors) +
-    labs(title = paste("Facebook Ads Analysis for ",
-                       sumnam, ": Created on  ", todaydt,
-                       sep = ""),
+    labs(title = paste0("Facebook Ads Analysis for ",
+                       sumnam),
+         subtitle = paste("Created on  ", todaydt),
          caption = paste("Data from ",
                          file_nam,
                          sep = "")) +
     theme(plot.title = element_text(hjust = 0.5, color = '#EEEEEE',
                                     size = 28),
+          plot.subtitle = element_text(hjust = 0.5, color = '#EEEEEE',
+                                     size = 14),
           legend.position="none",
           text = element_text(size = 14, color = '#EEEEEE'),
-          axis.text = element_text(size = 10, color = '#EEEEEE'),
+          axis.text = element_text(size = 07, color = '#EEEEEE'),
           panel.background = element_rect(fill = '#333333'),
           plot.background = element_rect(fill = '#333333'),
           panel.grid = element_blank(),
@@ -72,7 +74,7 @@ graphads <- function(summary_frm_distinct_grp, printrow, grpvar, grpvarprint, su
     ylab(str_c("Cost per ", sumnam)) +
     geom_text(aes(label = paste0("$", costevent, ";Spent=$",
                                  sumspent)),
-              vjust = -0.3, size = 04,
+              vjust = -0.3, size = 03,
               color = '#CCCCCC')
   plotformsG <- ggplotGrob(plotforms)
   extrainfo <- paste("Median cost (all) only considers where there was at least one ", sumnam, sep = "")
